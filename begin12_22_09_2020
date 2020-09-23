@@ -12,7 +12,7 @@ int main()
 	cin >> a;
 	cout << "Znachenna' storonu b =  " << endl;
 	cin >> b;
-	c = sqrt(a*a + a*a);
+	c = sqrt(b*b + a*a);
 	p = 2 * a + 2 * b;
 	cout << "hipotenuza c=" << c << endl;
 	cout << "perimetr P= " << p <<endl;
