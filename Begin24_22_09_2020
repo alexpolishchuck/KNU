@@ -1,0 +1,31 @@
+#include "iostream"
+#include<cmath>
+#include <clocale>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	float A;
+	float B;
+	float C;
+	cout << "Введiть А:";
+	cin >> A;
+	cout << endl;
+	cout << "Введiть В:";
+	cin >> B;
+	cout << "Введiть C:";
+	cin >> C;
+	A=A+B+C;
+	C = (A - B - C);
+	B = (A - C - B) ;
+	A = (A-B-C);
+	cout << "Нове А:" << A << endl;
+	cout << "Нове B:" << B << endl;
+	cout << "Нове C:" << C << endl;
+
+
+	
+	return 0;
+}
