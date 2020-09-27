@@ -1,0 +1,59 @@
+#include "iostream"
+#include<cmath>
+#include <clocale>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	float A1;
+	float B1;
+	float A2;
+	float B2;
+	float C1;
+	float C2;
+	float D;
+	float x;
+	float y;
+
+	do
+	{
+		cout << "Введiть коефiцiєнт A1=";
+		cin >> A1;
+		cout << endl;
+		cout << "Введiть коефiцiєнт B1=";
+		cin >> B1;
+		cout << endl;
+		cout << "Введiть коефiцiєнт C1=";
+		cin >> C1;
+		cout << endl;
+		cout << "Введiть коефiцiєнт A2=";
+		cin >> A2;
+		cout << endl;
+		cout << "Введiть коефiцiєнт B2=";
+		cin >> B2;
+		cout << endl;
+		cout << "Введiть коефiцiєнт C2=";
+		cin >> C2;
+		cout << endl;
+		D = A1*B2 - A2*B1;
+
+		if (D==0) {
+			cout << "Введiть такi коефiцiєнти при яких D не дорiвнює 0 , будь ласка:" << endl;
+			cin.clear();
+			cin.ignore(200,'\n');
+
+	}
+	
+	
+	} while (D == 0);
+	
+	x = (C1 * B2 - C2 * B1) / D;
+	y = (A1 * C2 - A2 * C1) / D;
+
+
+	cout << "X= " << x<<endl;
+	cout << "Y=" << y;
+	return 0;
+}
