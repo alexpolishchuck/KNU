@@ -1,0 +1,41 @@
+#include "iostream"
+#include<cmath>
+#include <clocale>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	float X;
+	float A;
+	float Y;
+	float P;
+	float C;
+	do
+	{
+		cout << "Введiть кiлькiсть кг цукерок X=";
+		cin >> X;
+		cout << endl;
+		cout << "Введiть кiлькiсть кг цукерок Y=";
+		cin >> Y;
+		cout << endl;
+		cout << "Введiть цiну за Х кг цукерок A=";
+		cin >> A;
+		cout << endl;
+		if (Y == X or Y<=0 or X<=0) {
+			cout << "Введiть таке Y>0, яке не дорiвнює X>0, будь ласка:" << endl;
+			cin.clear();
+			cin.ignore(200,'\n');
+
+	}
+	
+	
+	} while (Y == X or Y <= 0 or X <= 0);
+	P = A / X;
+	C = Y * P;
+
+	cout << "Цiна за 1 кг цукерок P= " << P<<endl;
+	cout << "Цiна за Y кг цукерок C=" << C;
+	return 0;
+}
