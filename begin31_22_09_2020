@@ -1,0 +1,18 @@
+#include "iostream"
+#include<cmath>
+#include <clocale>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	float TC;
+	float TF;
+	cout << "Введiть TF=";
+	cin >> TF;
+	cout << endl;
+	TC = (TF - 32) * 5 / 9;
+	cout << "TC=" << TC;
+	return 0;
+}
