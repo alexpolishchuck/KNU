@@ -1,0 +1,30 @@
+#include <iostream>
+#include <stdio.h>
+#include <locale>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+    setlocale(LC_CTYPE, "ukr");
+    int A;
+    do {
+        cout << "Введiть 0<А<100, A=";
+        cin >> A;
+        cout << endl;
+        if (A < 0
+            || A>100 || A < 0) {
+
+            cin.clear();
+        }
+    } while (A < 0
+        || A>100 || A < 0);
+    int F = A / 10;
+    cout << "кількість десятків =" << F << endl;
+    float y = 10;
+    double Z = A%10;
+    cout << "кількість одиниць =" << Z << endl;
+    
+        
+        return 0;
+    }
