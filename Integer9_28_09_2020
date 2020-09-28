@@ -1,0 +1,25 @@
+#include <iostream>
+#include <stdio.h>
+#include <locale>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+    setlocale(LC_CTYPE, "ukr");
+    int A;
+    int B;
+    do {
+        cout << "Введiть число A=";
+        cin >> A;
+        B = A / 100;
+        if (A<100||A>999) {
+            cin.clear();
+
+        }
+        
+    
+    } while (A < 100 || A>999);
+    cout <<"кiлькiсть сотень="<< B;
+        return 0;
+    }
