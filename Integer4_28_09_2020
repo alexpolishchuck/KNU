@@ -1,0 +1,31 @@
+#include <iostream>
+#include <stdio.h>
+#include <locale>
+using std::cout;
+using std::cin;
+using std::endl;
+    int main()
+    {
+        setlocale(LC_CTYPE, "ukr");
+        int A;
+        int B;
+        do {
+            cout << "Введiть А>0, A=";
+            cin >> A;
+            cout << endl;
+            cout << "Введiть B>0, B<A, B=";
+            cin >> B;
+            if (A <= B or A < 0 or B < 0) {
+                cin.clear();
+                
+            
+            }
+
+        
+        } while (A <= B || A < 0 || B < 0);
+
+        A = A / B;
+        cout << "Кiлькiсть вiдрiзкiв = " << A;
+        
+        return 0;
+    }
