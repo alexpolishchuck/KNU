@@ -1,0 +1,29 @@
+#include <iostream>
+#include<cmath>
+#include <clocale>
+
+using std::cout;
+using std::cin;
+using std::endl;
+void X(int A,int B, int C)
+{
+	cout << "Ваше число=" << A <<C<<B ;
+
+}
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	int A, B, C;
+	do {
+		cout << "Введiть послiдовно три цифри, якi є цiлими та бiльшими за нуль" << endl;
+		cin >> A >> B >> C;
+		if (A <= 0 || B <= 0 || C <= 0 || A>=10 || C >= 10||B >= 10)
+		{
+			cin.clear();
+			cin.ignore();
+		}
+	} while (A <= 0 || B <= 0 || C <= 0 || A >= 10 || C >= 10 || B >= 10);
+	X(A,B,C);
+	return 0;
+}
