@@ -1,0 +1,25 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	
+	int A;
+	cout << "key in number A=";
+	cin >> A;
+	cout << endl;
+
+
+	bool devbytwo (A%2==0);
+	cout << devbytwo;
+
+	return 0;
+}
