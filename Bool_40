@@ -1,0 +1,35 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	
+	int x1, x2, y1, y2;
+	do {
+		cout << "Key in x-coordinates:" << endl;
+		cin >> x1 >> x2;
+		cout << endl;
+		cout << "Key in y-coordinates:" << endl;
+		cin >> y1 >> y2;
+		cout << endl;
+		if (x1 <= 0 || x2 <= 0 || y1 <= 0 || y2 <= 0) {
+			cin.clear();
+			cin.ignore();
+		}
+
+	} while (x1 <= 0 || x2 <= 0 || y1 <= 0 || y2 <= 0);
+	bool iscool(abs(y1-y2)==2 && abs(x1-x2)==1 || abs(y1 - y2) == 1 && abs(x1 - x2) == 2) ;
+	if (iscool)
+		cout << "Good";
+	else
+		cout << "Bad";
+	return 0;
+}
