@@ -1,0 +1,31 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	
+	int x;
+	int y;
+	
+	cout << "Key in an x-coordinate=";
+	cin >> x;
+	cout << endl;
+	cout << "Key in an x-coordinate=";
+	cin >> y;
+	cout << endl;
+	
+	bool iscool(x<0 && y>0);
+	if (iscool)
+		cout << "Good";
+	else
+		cout << "Bad";
+	return 0;
+}
