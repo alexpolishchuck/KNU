@@ -1,0 +1,32 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	
+	int a, b, c;
+	
+	cout << "Key in length of size a:"<<endl;
+	cin >> a;
+	cout << endl;
+	cout << "Key in length of size b:" << endl;
+	cin >> b;
+	cout << endl;
+	cout << "Key in length of size c:" << endl;
+	cin >> c;
+	cout << endl;
+	bool iscool(a==b||b==c||c==a||a==b && a==c && b==c) ;
+	if (iscool)
+		cout << "Good";
+	else
+		cout << "Bad";
+	return 0;
+}
