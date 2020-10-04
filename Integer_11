@@ -1,0 +1,43 @@
+#include <iostream>
+#include<cmath>
+#include <clocale>
+
+using std::cout;
+using std::cin;
+using std::endl;
+int B(int A)
+{
+	int F1 = A / 100;
+
+	int F2 = A%10;
+	A = A / 10;
+	int F3 = A % 10;
+	int sum = F1 + F2 + F3;
+	int multp = F1 * F2 * F3;
+	cout << "sum=" << sum << endl;
+	cout << "multp" << multp;
+	return sum && multp;
+
+}
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	int A;
+	do {
+		
+		cout << "Введiть число 100<=А<=999" << endl;
+		cin >> A; 
+		if (A < 100 || A > 999) {
+			cin.clear();
+			cin.ignore();
+			
+		}
+		
+
+
+	} while (A < 100 || A > 999);
+	B(A);
+	
+	return 0;
+}
