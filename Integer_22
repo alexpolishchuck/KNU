@@ -1,0 +1,42 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+
+using std::cout;
+using std::cin;
+using std::endl;
+int A(float sec1)
+{
+	float sec2;
+	float min1;
+	sec1 = sec1 / 3600;
+
+	sec2 = modf(sec1, &min1);
+	sec2 = sec2 * 3600;
+
+	cout << "amount of seconds passed since last minute = " << sec2 << endl;
+	return sec2;
+}
+int main()
+{
+	int sec1;
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	do {
+		cout << "key in the amount of seconds = " << endl;
+		cin >> sec1;
+		cout << endl;
+		if (sec1 <= 0) {
+
+			cin.clear();
+			cin.ignore();
+
+		
+		}
+
+
+	} while (sec1 <= 0);
+	A(sec1);
+	
+	return 0;
+}
