@@ -1,0 +1,33 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	
+	int A;
+	int B;
+	int C;
+	cout << "Key in a number A=";
+	cin >> A;
+	cout << endl;
+	cout << "Key in a number B=";
+	cin >> B;
+	cout << endl;
+	cout << "Key in a number C=";
+	cin >> C;
+	cout << endl;
+	bool iscool(A==-B||A==-C||B==-C);
+	if (iscool)
+		cout << "Good";
+	else
+		cout << "Bad";
+	return 0;
+}
