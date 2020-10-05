@@ -1,0 +1,28 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+	
+
+
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	int a, b, c;
+	cin >> a >> b >> c;
+	if (a < b && a < c)
+		cout << a;
+	else
+		if (b < a && b < c)
+			cout << b;
+		else if (c < b && c < a)
+			cout << c;
+	
+	return 0;
+}
