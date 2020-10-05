@@ -14,15 +14,18 @@ int main()
 {
 	
 	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
-	int a, b, c;
-	cin >> a >> b >> c;
-	if (a < b && a < c)
+	int a, b, c, d;
+	cin >> a >> b >> c >> d;
+	if (a < b && a < c && a < d)
 		cout << a;
 	else
-		if (b < a && b < c)
+		if (b < a && b < c && b<d)
 			cout << b;
-		else if (c < b && c < a)
+		else if (c < b && c < a && c<d)
 			cout << c;
+			if (d < a && d < c && d < b)
+		cout << d;
+	
 	
 	return 0;
 }
