@@ -69,10 +69,7 @@ int main()
 	h2 = fun(b, a, c, d);
 	h3 = fun(c, a, b, d);
 	h4 = fun(d, a, b, c);
-	cout << h1 << endl;
-	cout << h2 << endl;
-	cout << h3 << endl;
-	cout << h4 << endl;
+	
 	if (h1 == h2 && a == b && h3 == h4 && c != d)//start
 		cout << "The most often to be met = " << a;
 	else
