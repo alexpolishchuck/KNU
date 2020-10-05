@@ -1,0 +1,130 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+
+int fun(int q, int w, int e, int z)
+{
+	int y1; int y2;
+	if (q == w && q != e && q != z)
+
+		y1 = q + w;
+	else
+		if (q == e && q != w && q != z)
+
+			y1 = q + e;
+		else
+			if (q == z && q != w && q != e)
+
+				y1 = q + z;
+			else
+				if (q == w && q == e && q != z)
+
+					y1 = q + w + e;
+				else
+					if (q == w && q == z && q != e)
+
+						y1 = q + w + z;
+					else
+						if (q == e && q == z && q != w)
+
+
+							y1 = q + e + z;
+						else
+							if (q != w && q != e && q != z)
+								y1 = q;
+							else
+								if (q == w && q == e && q == z)
+									y1 = q + w + e + z;
+
+
+	y2 = y1 / q;
+	
+	return y2;
+}
+int main()
+{
+	
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	int a, b, c, d, h1, h2, h3, h4;
+	do {
+		
+		cout << "Key in values for a, b, c, d (they >0) coherently :";
+		cin >> a >> b >> c >> d;
+		cout << endl;
+		if (a <= 0 || b <= 0 || c <= 0 || d <= 0)
+		{
+			cin.clear();
+			cin.ignore();
+
+		}
+	} while (a <= 0 || b<=0 || c<=0 || d<=0);
+	h1=fun(a, b, c, d);
+	h2 = fun(b, a, c, d);
+	h3 = fun(c, a, b, d);
+	h4 = fun(d, a, b, c);
+	cout << h1 << endl;
+	cout << h2 << endl;
+	cout << h3 << endl;
+	cout << h4 << endl;
+	if (h1 == h2 && a == b && h3 == h4 && c != d)//start
+		cout << "The most often to be met = " << a;
+	else
+		if (h1 == h2 && a != b && h3 == h4 && c == d)//return to this one and check
+			cout << "The most often to be met = " << c;//done
+		else
+			if (h1 == h2 && a == b && h3 == h4 && c == d)
+				cout << "The most often to be met = " << a << "," << c;//ok
+			else
+				if (h1 == h3 && a == c && h2 == h4 && b != d)
+					cout << "The most often to be met = " << a;
+				else
+					if (h1 == h3 && a == c && h2 == h4 && b == d)
+						cout << "The most often to be met = " << a << "," << b;
+					else
+						if (h1 == h3 && a != c && h2 == h4 && b == d)
+							cout << "The most often to be met = " << b;//done
+						else
+							if (h1 == h4 && a == d && h2 == h3 && b != c)
+								cout << "The most often to be met = " << a;
+							else
+								if (h1 == h4 && a == d && h2 == h3 && b == c)
+									cout << "The most often to be met = " << a << "," << b;
+								else
+									if (h1 == h4 && a != d && h2 == h3 && b == c)
+										cout << "The most often to be met = " << b;//done
+									else
+										if (h1 == h2 && h1 == h3 && h1 == h4 && a == b && a == c && a == d)//ok
+											cout << "The most often to be met = " << a;
+										else
+											if (h1 == h2 && h1 == h3 && h1 == h4 && a != b && a != c && a != d)//ok
+												cout << "The most often to be met = " << a << "," << b << "," << c << "," << d;
+											else
+												if (h1 == h2 && h1 == h3 && a == b && a == c && a != d)//start
+													cout << "The most often to be met = " << a;
+												else if (h1 == h3 && h1 == h4 && a == c && a == d && a != b)
+													cout << "The most often to be met = " << a;
+												else if (h1 == h2 && h1 == h4 && a == b && a == d && a != c)
+													cout << "The most often to be met = " << a;//end
+												else
+													if (h2 == h3 && h2 == h4 && b == c && b == d && b != a)
+														cout << "The most often to be met = " << b;
+													else 
+														if(h3==h2 && h3==h4 && c==b && c==d && c!=a)
+															cout << "The most often to be met = " << c;
+	
+
+										
+
+
+
+
+
+	return 0;
+}
