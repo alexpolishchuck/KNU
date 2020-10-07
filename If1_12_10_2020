@@ -18,7 +18,7 @@ int main()
 	return 0;
 }
 
-//функція в checkSign.cpp
+//функція в Libif.cpp
 
 
 #include <iostream>
@@ -37,6 +37,6 @@ void checksign(int n)
 		cout << n;
 }
 
-//заголовок checksign.h
+//заголовок Libif.h
 #pragma once
 void checksign(int n);
