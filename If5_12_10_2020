@@ -1,0 +1,40 @@
+//головний код
+
+#include <iostream>
+#include<math.h>
+#include "checksign.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int a,b,c;
+	cout << "Enter a,b,c =";
+	cin >> a>>b>>c;
+	negpos (a,b,c);
+	return 0;
+}
+
+//функція в Libif.cpp
+
+void negpos(int a, int b, int c)
+
+{
+	int negative=0;
+	int positive = 0;
+	if (a > 0) positive++;
+	else negative++;
+	if (b > 0) positive++;
+	else negative++;
+	if (c > 0) positive++;
+	else negative++;
+	cout << "quantity of negative = " << negative << endl;
+	cout << "quantity of positive =" << positive;
+}
+
+//заголовок Libif.h
+#pragma once
+void negpos(int a, int b, int c);
