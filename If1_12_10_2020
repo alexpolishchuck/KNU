@@ -1,0 +1,42 @@
+//Головний код
+#include <iostream>   
+#include<math.h>
+#include <clocale>
+#include "checksign.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int n;
+	cout << "Enter n =";
+	cin >> n;
+	checksign (n);	
+	return 0;
+}
+
+//функція в checkSign.cpp
+
+
+#include <iostream>
+#include<math.h>
+
+using std::cout;
+using std::cin;
+void checksign(int n)
+{
+	
+	bool flag(n > 0);
+	if (flag)
+		cout << (n = n + 1);
+
+	else
+		cout << n;
+}
+
+//заголовок checksign.h
+#pragma once
+void checksign(int n);
