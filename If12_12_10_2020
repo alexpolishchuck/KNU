@@ -1,0 +1,35 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include "Libif.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int a, b,c,min;
+	cout << "Enter a,b,c =";
+	cin >> a>>b>>c;
+	min = findmin(a, findmin(b, c));
+	cout << min;
+	return 0;
+}
+
+//Libif.cpp
+int findmin(int a, int b)
+{
+	int min;
+	if (a < b)
+		min = a;
+	else
+		min = b;
+
+
+	return min;
+}
+
+//Libif.h
+int findmin(int a, int b);
