@@ -1,0 +1,43 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include "Libif.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int a, b;
+	cout << "Enter a,b =";
+	cin >> a;
+	cin >> b;
+	isequal(a, b);
+	return 0;
+}
+
+//Libif.cpp
+
+int isequal(int a, int b)
+{
+	if (a == b)
+	{
+		a = 0;
+		b = 0;
+		cout << "A=" << a << "B=" << b;
+	}
+	else {
+		a = a + b;
+		b = a;
+
+		cout << "A=" << a << "B=" << b;
+	}
+
+	return a && b;
+}
+
+//Libif.h заголовок
+#pragma once
+int isequal(int a, int b);
