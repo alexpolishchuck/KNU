@@ -1,0 +1,35 @@
+//головний код
+#include <iostream>
+#include<math.h>
+#include "Iflib.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+
+int main()
+{
+	float year;
+	cout << "Enter year =";
+	cin >> year;
+	cout << endl;
+	year = numberofdays(year);
+	cout << "Number of days=" << year;
+	return 0;
+}
+// функція в Libif.cpp
+int numberofdays(int year)
+{
+	int days;
+	if (year % 100 == 0 && year % 400 != 0 || year % 4 != 0)
+		days = 365;
+	else
+		if (year % 4 == 0 && year % 100 != 0 || year % 100 == 0 && year % 400 == 0)
+			days = 366;
+
+	return days;
+}
+// заголовок в Libif.h
+int numberofdays(int year);
