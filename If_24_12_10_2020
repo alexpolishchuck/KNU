@@ -1,0 +1,42 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include "Iflib.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+
+
+int main()
+{
+	float x;
+	cout << "Enter x =";
+	cin >> x;
+	cout << endl;
+	x=function(x);
+	cout.precision(2);
+	cout << x;
+
+
+
+	
+	
+	return 0;
+}
+//функція в Libif.cpp
+float function(float x)
+{
+	float(F);
+	if (x > 0)
+		F = 2 * sin(x);
+	else
+		F = 6 - x;
+	return F;
+
+}
+
+//заголовок в Libif.h
+float function(float x);
