@@ -1,0 +1,43 @@
+// головний код 
+#include <iostream>
+#include<math.h>
+#include "Iflib.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+
+
+int main()
+{
+	int x, y, number;
+	cout << "Enter x,y =";
+	cin >> x>>y;
+	cout << endl;
+	number=OxOy(x, y);
+	cout << number;
+
+	
+	
+	return 0;
+}
+
+//функція в Libif.cpp
+int OxOy(int x, int y)
+{
+	int number;
+	if (x == 0 && y == 0)
+		number = 0;
+	else if (y == 0 && x != 0)
+		number = 1;
+	else if (x == 0 && y != 0)
+		number = 2;
+	else number = 3;
+
+	return number;
+}
+
+//заголовок в Libif.h
+int OxOy(int x, int y);
