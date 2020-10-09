@@ -1,0 +1,53 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libswitch.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+
+int main()
+{
+
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	float A;
+	int N;
+	cout << "Enter value of mass of A(grams)=";
+	cin >> A;
+	cout << endl;
+	cout << "1-кг \n 2-мг \n 3-грам \n 4-тонна \n 5-центнер" << endl;
+	cout << "Enter value of N=";
+	cin >> N;
+	cout << endl;
+	A = converter(A, N);
+	cout << "Result=" << A;
+	return 0;
+}
+//функція в Libswitch.cpp
+float converter(float A, int N)
+{
+	switch (N)
+	{
+	case (1):
+		A = A/1000 ;
+		break;
+	case(2):
+		A = A*1000;
+		break;
+	case(3):
+		A = A ;
+		break;
+	case (4):
+		A = A / 10000;
+		break;
+	case (5):
+		A = A / 100000;
+		break;
+}	return A;
+}
+//заголовок в Libswitch.h
+float converter(float A, int N);
