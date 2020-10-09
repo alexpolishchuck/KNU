@@ -1,0 +1,57 @@
+//головний код 
+int main()
+{
+
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	int day, month;
+	cout << "Enter valid date " << endl;
+	cout << "Enter day: " << endl;
+	cin >> day;
+	cout << endl;
+	cout << "Enter month: " << endl;
+	cin >> month;
+	prdate(day, month);
+	return 0;
+}
+//функція в Libswitch.cpp
+void prdate(int day, int month)
+{
+	int maxdays;//максимальний день місяця
+	bool flagD((day - 1) != 0);
+	if (flagD)
+		month = month;
+	else month = month - 1;
+	switch (month)
+	{
+	case(0):
+	case(1):
+	case(3):
+	case(5):
+	case(7):
+	case(8):
+	case(10):
+	case(12):
+		maxdays = 31;
+		break;
+	case (2):
+		maxdays = 28;
+		break;
+	case(4):
+	case(6):
+	case(9):
+	case(11):
+		maxdays = 30;
+		break;
+	}
+
+
+	if (flagD)
+		cout << "Previous date: " << (day - 1) << "." << month;
+	else if (!flagD && (month) != 0)
+		cout << "Previous date: " << maxdays << "." << month;
+	else if (!flagD && (month) == 0)
+		cout << "Previous date: " << maxdays << "." << (month = 12);
+
+};
+//заголовок в Libswitch.h
+void prdate(int day, int month);
