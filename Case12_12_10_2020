@@ -1,0 +1,49 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libswitch.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	float N,S,R, D, L, π(3.14);
+	cout << "Enter value of R=";
+	cin >> R;
+	cout << endl;
+	cout << "Choose what to find:" << endl;
+	cout << " 1-R \n 2-D \n 3-L \n 4-S";
+	cout << "Enter number N=";
+	cin >> N;
+	cout << endl;
+	findwithR(R, N);
+	
+	return 0;
+}
+//функція в Libswitch.cpp
+void findwithR(float R, int N)
+{
+	float result, π(3.14);
+	switch (N)
+	{
+	case (1):
+		cout << "R=" << (result = R);
+		break;
+	case(2):
+		cout << "D=" << (result = 2 * R);
+		break;
+	case(3):
+		cout << "L=" << (result = 2 * π * R);
+		break;
+	case (4):
+		cout << "S=" << (result = π * R * R);
+		break;
+
+	}
+}
+//заголовок в Libswitch.h
+void findwithR(float R, int N);
