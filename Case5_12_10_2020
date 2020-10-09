@@ -1,0 +1,43 @@
+//Головний код
+int main()
+{
+
+	setlocale(LC_ALL, "Ukrainian_Ukraine.1251");
+	int A, B, N;
+	cout << "Enter value of A=";
+	cin >> A;
+	cout << endl;
+
+	cout << "Enter value of B=";
+	cin >> B;
+	cout << endl;
+
+	cout << "Enter value of N=";
+	cin >> N;
+	cout << endl;
+	A = operation(A, B, N);
+	cout << "Result=" << A;
+	return 0;
+}
+
+//функція з Libswitch.cpp
+int operation(int A, int B, int N)
+{
+	switch (N)
+	{
+	case (1):
+		A = A + B;
+		break;
+	case(2):
+		A = A - B;
+		break;
+	case(3):
+		A = A * B;
+		break;
+	case (4):
+		A = A / B;
+		break;	}
+return A;
+}
+//заголовок в Libswitch.h
+int operation(int A, int B, int N);
