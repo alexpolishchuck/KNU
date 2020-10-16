@@ -1,0 +1,41 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	float X, N;
+	cout << "Enter X,N coherently :";
+	cin >> X >> N;
+	cout << endl;
+	double cos = 0;
+	double fact=1;
+	for (int i = 0; i <= N; i++)
+	{
+		cos = cos + (pow(-1, i) * pow(X, 2 * i) / factorial(i));
+	}
+	cout << cos;
+	return 0;
+};
+//функція в Libfor.cpp
+float factorial(int N)
+{
+	float fact=1;
+	for (int i = 0; i <= 2 * N; i++)
+	{
+		fact *= i;
+		if (fact == 0)
+		{
+			fact = 1;
+		}
+	}
+		return fact;
+	
+}
+//заголовок в Libfor.h
+float factorial(int N);
