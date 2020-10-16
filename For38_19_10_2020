@@ -1,0 +1,40 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	float sum(0), N;
+	do {
+		cout << "Enter N>0,please  :";
+		cin >> N;
+		cout << endl;
+		static_cast <float>(N);
+		if (N <= 0)
+		{
+			system("cls");
+			cin.clear();
+			cin.ignore();
+			cout << "I ASKED POLITELY!!!!!!" << endl;
+		}
+	} while (N <= 0);
+	powsum(N);
+	return 0;
+};
+//функція в Libfor.cpp
+void powsum(int N) {
+	float sum=0;
+	for (int i = 1; i <= N; i++)
+	{
+		float x = N + 1 - i;
+		sum = sum + pow(i, x);
+	}
+	cout << sum;
+};
+//заголовок в Libfor.h
+void powsum(int N);
