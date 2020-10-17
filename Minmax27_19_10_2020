@@ -1,0 +1,54 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	int N ;
+	cout << "Enter N>0 = ";
+		cin >>N;
+		cout << endl;
+		maxquantity(N);
+	return 0;
+};
+
+//функція в Libfor.cpp
+void maxquantity(int N)
+{
+	int numb1 = 10, numb2 = 10, maxi, numbi = 0, maxcount = 0, count = 0;
+	for (int i = 1; i <= N; i++)
+	{
+		numb2 = numb1;
+		cout << i << ")" << "Enter number= " << endl;
+		cin >> numb1;
+		cout << endl;
+		if (numb2 == numb1) ++count;
+		else
+		{
+			if (count > maxcount)
+			{
+				maxcount = count;
+				maxi = numbi;
+
+			}
+			numbi = i;
+			count = 1;
+		}
+
+	}
+	if (count > maxcount)
+	{
+		maxcount = count;
+		maxi = numbi;
+
+	}
+	cout << maxi;
+}
+//заголовок в Libfor.h
+void maxquantity(int N)
