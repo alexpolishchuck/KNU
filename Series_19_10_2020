@@ -1,0 +1,40 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	int K;
+	cout << "Enter K  :";
+	cin >>K ;
+	cout << endl;
+	biggernumber(K);
+	return 0;
+};
+//функція в Libfor.cpp
+void biggernumber(int K)
+{
+	int number(1);
+	while (number != 0)
+	{
+		cout << "enter number:";
+		cin >> number;
+		cout << endl;
+		if (number > K)
+			cout << "Number is bigger than K" << endl;
+		else
+		{
+			system("cls");
+			cout << "Number is smaller than K or equal to K" << endl;
+		}
+
+	}
+}
+//заголовок в Libfor.h
+void biggernumber(int K)
