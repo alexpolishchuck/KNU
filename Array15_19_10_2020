@@ -1,0 +1,52 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	int N ;
+	cout << "Enter 100>N>0 = ";
+		cin >>N;
+		cout << endl;
+		organizerofnumbers(N);
+	return 0;
+};
+//функція в Libfor.cpp
+void organizerofnumbers(int N) {
+	int number;
+	int A[100];
+	for (int i = 0; i < N; i++)
+	{
+		cout << "Enter a number of massive= ";
+		cin >> number;
+		A[i] = number;
+	}
+	for (int i = 0; i < N; i++)
+	{
+		number = A[i];
+		static_cast <float> (number);
+		if (number % 2 != 0)
+		{
+			cout << number << " ";
+		}
+
+	}
+	for (int i = N - 1; i >= 0; i--)
+	{
+		number = A[i];
+		static_cast <float> (number);
+		if (number % 2 == 0)
+		{
+			cout << number << " ";
+		}
+
+	}
+}
+//заголовок в Libfor.h
+void organizerofnumbers(int N)
