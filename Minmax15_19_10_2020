@@ -1,0 +1,41 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	int B,C;
+	cout << "Enter C>B>0 = ";
+		cin >> C>>B;
+		cout << endl;
+		whichMax(C, B);
+	return 0;
+};
+//функція в Libfor.cpp
+void whichMax(int C, int B)
+{
+	int number, check;
+	cout << "1) Enter a number: ";
+	cin >> number;
+	cout << endl;
+	check = number;
+	for (int i = 2; i <= 10; i++)
+	{
+		cout << i << ")" << " " << "Enter a number: ";
+		cin >> number;
+		if (number > check && number <= C && number >= B)
+			check = number;
+	}
+	if (check >= B && check <= C)
+		cout << check;
+	else
+		cout << "0 0";
+}
+//заголовок в Libfor.h
+void whichMax(int C, int B)
