@@ -1,0 +1,40 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	int N, K = 0;
+
+	cout << "Enter N>0,please  :";
+	cin >> N;
+	cout << endl;
+	findpow(N);
+	return 0;
+};
+//функція в Libfor.cpp
+int findpow(int N) {
+	int K;
+	if (N == 1)
+		K = 0;
+	else
+		if (N <= 0)
+		{
+			cout << "Wrong N";
+			return 0;
+		}
+	while (N >= 2)
+	{
+		++K;
+		N /= 2;
+	}
+	cout << "Power =" << K;
+	return K;
+};
+//заголовок в Libfor.h
+int findpow(int N);
