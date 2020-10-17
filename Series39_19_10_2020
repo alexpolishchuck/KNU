@@ -1,0 +1,50 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	int K;
+	cout << "Enter K= ";
+		cin >> K;
+		cout << endl;
+		sawline(K);
+	return 0;
+};
+//функція в Libfor.cpp
+void sawline(int K)
+{
+	int number0(1), count(0), numb1, numb2;
+		for (int i = 1; i <= K; ++i)
+		{
+			cout << " (" << i << ") " << endl;
+			cout << "Enter number =";
+			cin >> number0;
+			cout << endl;
+			cout << "Enter number =";
+			cin >> numb1;
+			cout << endl;
+			int check = 1;
+			while (number0 != 0)
+			{
+				numb2 = numb1;
+				numb1 = number0;
+				cout << "Enter number =";
+				cin >> number0;
+				cout << endl;
+				if (!((numb2 > numb1 && numb2 > number0) || (numb2 < number0 && numb2 < numb1)) && (number0 != 0))
+					check = 0;
+
+			}
+			if (check) count += 1;
+		}
+	cout << count;
+}
+//заголовок в Libfor.h
+void sawline(int K)
