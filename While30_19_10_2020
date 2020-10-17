@@ -1,0 +1,45 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	float A, B, C, numberA(0) , numberB(0),amountofsq ;
+	cout << "Enter A>B>C>0  :";
+	cin >>A>>B>>C ;
+	cout << endl;
+	if (A <= 0 || B <= 0 || C <= 0)
+	{
+		cout << "NO GOD PLEASE NO! CHANGE YOUR FIGURES!" << endl;
+		return 0;
+	};
+	
+	squares(A, B, C);
+	return 0;
+};
+
+
+//функція в Libfor.cpp
+void squares(float A, float B, float C) {
+	int numberA=0, numberB=0, amountofsq;
+	while (A >= C)
+	{
+		A -= C;
+		numberA += 1;
+	};
+	while (B >= C)
+	{
+		B -= C;
+		numberB += 1;
+	}
+	amountofsq = numberA * numberB;
+	cout << amountofsq;
+};
+//заголовок в Libfor.h
+void squares(float A, float B, float C)
