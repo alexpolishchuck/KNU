@@ -1,0 +1,31 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	int N ;
+	cout << "Enter 100>N>0 = ";
+		cin >>N;
+		cout << endl;
+		
+		masodd(N);
+	return 0;
+};
+//функція в Libfor.cpp
+void masodd(int N) {
+	int mas[100];
+	for (int i = 0; i <= N; i++)
+	{
+		mas[i] = 2 * i + 1;
+		cout << i << ")" << " " << mas[i] << endl;
+	}
+}
+//заголовок в Libfor.h
+void masodd(int N)
