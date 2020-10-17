@@ -1,0 +1,46 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	int days = 1;
+	float km = 10, percent, ranperday=10;
+	
+	cout << "Enter N>0,please  :";
+	cin >> percent;
+	cout << endl;
+	if (percent <= 0 || percent >= 50) {
+		system("cls");
+		cout << "wrong percentage" << endl;
+		return 0;
+	}
+	else
+		whenstoprunning(percent);
+	return 0;
+};
+
+//функція в Libfor.cpp
+float whenstoprunning(float percent)
+{
+	float km = 10, ranperday = 10;
+	int days = 1;
+	while (km < 200)
+	{
+		++days;
+		ranperday = (ranperday + ranperday * percent / 100);
+		km = km + ranperday;
+
+
+	}
+
+	cout << days;
+	return days;
+};
+//заголовок в Libfor.h
+float whenstoprunning(float percent);
