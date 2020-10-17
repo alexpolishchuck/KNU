@@ -1,0 +1,41 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "Libfor.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int main()
+{
+	
+	int N;
+	
+	cout << "Enter N= ";
+		cin >> N;
+		cout << endl;
+		density(N);
+	return 0;
+};
+//функція в Libfor.cpp
+void density(int N) {
+	int number = 0;
+	float m, v, P, check = 0;
+	for (int i = 1; i <= N; i++)
+	{
+		cout << i << ")" << " " << "Enter mass and volume: ";
+		cin >> m >> v;
+		P = m / v;
+		if (P > check)
+		{
+			check = P;
+			number = i;
+		}
+
+
+	}
+	cout << check << endl << number;
+}
+//заголовок в Libfor.h
+void density(int N)
