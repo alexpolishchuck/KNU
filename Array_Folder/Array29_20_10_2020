@@ -1,0 +1,56 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int N;
+	cout << "Enter N: ";
+	cin >> N;
+	cout << endl;
+	int* A = new int[N];
+	oddmax(N, A);
+	return 0;
+};
+
+
+//функція в LibArray.cpp
+void oddmax(int N, int*& A)
+{
+	for (int i = 0; i < N; i++)
+	{
+		int numb = 0;
+		cout << i << ") " << "Enter number";
+		cin >> numb;
+		cout << endl;
+		A[i] = numb;
+	};
+	int max = 0; int numb1 = A[0], numb2 = A[0];
+	for (int i = 0; i < N; i++)
+	{
+		if (i % 2 != 0)
+		{
+			numb2 = numb1;
+			numb1 = A[i];
+			if (numb1 > numb2)
+			{
+				max = numb1;
+
+			}
+			else
+				(max = numb2);
+
+		};
+
+	};
+	cout << max;
+}
+//заголовок в LibArray.h
+void oddmax(int N, int*& A)
