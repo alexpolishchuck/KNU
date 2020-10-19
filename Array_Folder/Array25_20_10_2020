@@ -1,0 +1,61 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int N;
+	cout << "Enter N: ";
+	cin >> N;
+	cout << endl;
+	int* pmas = new int[N];
+	cout << pmas << " " << &pmas << " " << *pmas << endl;
+	progression(N, pmas);
+	
+
+	return 0;
+};
+//функція в LibArray.cpp
+void  progression (int N, int *&pmas) {
+	for (int i = 0; i < N; i++)
+	{
+		int numb = 0;
+
+
+		cout << i << ") " << "Enter number";
+		cin >> numb;
+		cout << endl;
+		pmas[i] = numb;
+
+
+	};
+	float q1 = (pmas[1] / pmas[0]), q2;
+	for (int i = 0; i < (N - 1); i++)
+	{
+
+		q2 = q1;
+		q1 = (pmas[i + 1] / pmas[i]);
+		if (q1 != q2)
+		{
+			q1 = 0;
+			cout << q1 << endl;
+			break;
+
+		}
+
+	};
+	if (q1 != 0)
+	{
+		q1 = (pmas[1] / pmas[0]);
+		cout << q1;
+	}
+}
+//заголовок в LibArray.h
+void  progression (int N, int *&pmas)
