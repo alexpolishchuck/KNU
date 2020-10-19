@@ -1,0 +1,42 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h"
+#include <conio.h>
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int N,K,L;
+	cout << "Enter N,K,L: ";
+	cin >> N>>K>>L;
+	cout << endl;
+	average1(N, K, L);
+	return 0;
+};
+
+//функція в LibArray.cpp
+void average1(int N, int K, int L) {
+	int* pmas = new int[N];
+	int sum = 0;
+	for (int i = 0; i < N; i++)
+	{
+		pmas[i] = i;
+	};
+	for (int i = K; i <= L; i++)
+	{
+
+		sum += pmas[i];
+	};
+	static_cast<float>(sum);
+	static_cast<float>(K);
+	static_cast<float>(L);
+	float average = sum / (L - (K - 1.0));
+	cout << average;
+};
+//заголовок в LibArray.h
+void average1(int N, int K, int L)
