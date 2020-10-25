@@ -1,0 +1,59 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	int N;
+	cout << " Enter an N number :  ";
+	cin >> N;
+	cout << endl;
+	int* pmas = new int[N];
+	findabsolutemin(pmas, N);
+		return 0;
+	
+}
+//функція в LibArray.cpp
+void findabsolutemin(int* pmas, int N)
+{
+	int a1, a2, maxabsa = 0, numb, maxnumb1 = 0, maxnumb2 = 0, absa = 0;
+	cout << "1) Enter a number: ";
+	cin >> a1;
+	numb = 1;
+	cout << endl;
+	for (int i = 1; i < N; i++)
+	{
+		a2 = a1;
+		cout << i + 1 << ") Enter a number: ";
+		cin >> a1;
+		cout << endl;
+		pmas[i] = a1;
+		numb += 1;
+		absa = abs(a1 - a2);
+		if (absa < maxabsa && maxabsa != 0)
+		{
+			maxabsa = absa;
+			maxnumb1 = numb;
+			maxnumb2 = numb - 1;
+		}
+		else
+		{
+			if (maxabsa == 0) {
+				maxabsa = absa;
+				maxnumb1 = numb;
+				maxnumb2 = numb - 1;
+			}
+		}
+
+	}
+	cout << maxnumb2 << "----" << maxnumb1 << endl;
+}
+//заголовок в LibArray.h
+void findabsolutemin(int* pmas, int N)
