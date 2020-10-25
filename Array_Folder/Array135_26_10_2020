@@ -1,0 +1,67 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	 int N;
+	 cout << "Enter an N number: ";
+		 cin >> N;
+		 cout << endl;
+		 distancepoints(N);
+		return 0;
+	
+}
+//функція в LibArray.cpp
+void distancepoints(int N) {
+	float distance = 0, mindistance = 0;
+	int x1, x2, y1, y2;
+	int* N1 = new int[N];
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ") Enter an X number: ";
+		cin >> N1[i];
+		cout << endl;
+	};
+	int* N2 = new int[N];
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ") Enter an Y number: ";
+		cin >> N2[i];
+		cout << endl;
+	}
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = i + 1; j < N; j++)
+		{
+			distance = sqrt(pow(N1[j] - N1[i], 2) + pow(N2[j] - N2[i], 2));
+			if (distance < mindistance && mindistance != 0) {
+				mindistance = distance;
+				x1 = N1[i];
+				x2 = N1[j];
+				y1 = N2[i];
+				y2 = N2[j];
+			}
+			else if (mindistance == 0) {
+				mindistance = distance;
+				x1 = N1[i];
+				x2 = N1[j];
+				y1 = N2[i];
+				y2 = N2[j];
+			}
+		}
+
+	}
+	cout << "Minimal distance= " << mindistance << endl;
+	cout << "Coordinates of the first point: x=" << x1 << ";  y=" << y1 << endl;
+	cout << "Coordinates of the second point: x=" << x2 << ";  y=" << y2 << endl;
+}
+//заголовок в LibArray.h
+void distancepoints(int N)
