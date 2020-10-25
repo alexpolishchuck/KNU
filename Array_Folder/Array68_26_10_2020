@@ -1,0 +1,72 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	 int N;
+	 cout << "Enter an N number: ";
+		 cin >> N;
+		 cout << endl;
+	int *pmas= new int [N];
+
+	changeminmax(pmas, N);
+		return 0;
+	
+}
+
+//функція в LibArray.cpp
+void changeminmax(int* pmas, int N) {
+
+	int numb, max = 0, min = 0, maxi = 0, mini = 0;
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ") Enter a number: ";
+		cin >> numb;
+		pmas[i] = numb;
+		cout << endl;
+		if (numb > max && max != 0)
+		{
+			max = numb;
+			maxi = i;
+		}
+		else if (max == 0)
+		{
+			max = numb;
+			maxi = i;
+		}
+		if (numb < min && min != 0)
+		{
+			min = numb;
+			mini = i;
+		}
+		else if (min == 0)
+		{
+			min = numb;
+			mini = i;
+		}
+
+	}
+	cout << min << " " << mini << endl;
+	cout << max << " " << maxi << endl;
+
+
+	for (int i = 0; i < N; i++)
+	{
+		if (i == mini)
+			cout << mini + 1 << ") " << pmas[maxi] << endl;
+		else if (i == maxi)
+			cout << maxi + 1 << ") " << pmas[mini] << endl;
+		else cout << i + 1 << ") " << pmas[i] << endl;
+
+	}
+}
+//заголовок в LibArray.h
+void changeminmax(int* pmas, int N)
