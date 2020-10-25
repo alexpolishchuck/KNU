@@ -1,0 +1,59 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	 int N;
+	 cout << "Enter an N number: ";
+		 cin >> N;
+		 cout << endl;
+	int *pmas= new int [N];
+
+	localmaxerazer(pmas, N);
+		return 0;
+	
+}
+
+//функція в LibArray.cpp
+void localmaxerazer(int* pmas, int N) {
+	int a1, a2, a3;
+	cout << "1) Enter a number: ";
+	cin >> a1;
+	cout << endl;
+	pmas[0] = a1;
+	cout << "2) Enter a number: ";
+	cin >> a2;
+	cout << endl;
+	pmas[1] = a2;
+	a3 = a2;
+	a2 = a1;
+	for (int i = 2; i < N; i++)
+	{
+
+		cout << i + 1 << ") Enter a number: ";
+		cin >> a1;
+		pmas[i] = a1;
+		cout << endl;
+		if (a3 > a2 && a3 > a1)
+		{
+			pmas[i - 1] = 0;
+		}
+
+		a2 = a3;
+		a3 = a1;
+	}
+	for (int i = 0; i < N; i++)
+	{
+		cout << pmas[i] << endl;
+	}
+}
+//заголовок в LibArray.h
+void localmaxerazer(int* pmas, int N)
