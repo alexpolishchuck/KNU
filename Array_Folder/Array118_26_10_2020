@@ -1,0 +1,64 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	 int N;
+	 cout << "Enter an N number: ";
+		 cin >> N;
+		 cout << endl;
+		 
+		 int* pmas = new int[N];
+
+		 zeroafterseries(pmas, N);
+		return 0;
+	
+}
+//функція в LibArray.cpp
+void zeroafterseries(int* pmas, int N) {
+	int a1, a2 = 0;
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ") Enter a number: ";
+		cin >> pmas[i];
+		cout << endl;
+	}
+	a1 = pmas[0];
+	for (int i = 1; i < N; i++)
+	{
+		a2 = a1;
+		a1 = pmas[i];
+		if (a1 != a2)
+		{
+			N = N + 1;
+			int* temp_mas = new int[N];
+			for (int j = 0; j < N - 1; j++)
+			{
+				temp_mas[j] = pmas[j];
+
+			}
+			delete[] pmas;
+			pmas = temp_mas;
+
+			for (int j = N - 1; j > i; j--)
+			{
+				pmas[j] = pmas[j - 1];
+			}
+			pmas[i] = 0;
+		}
+	}
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ") " << pmas[i] << endl;
+	}
+};
+//заголовок в LibArray.h
+void zeroafterseries(int* pmas, int N)
