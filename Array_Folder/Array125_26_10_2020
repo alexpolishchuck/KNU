@@ -1,0 +1,80 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	 int N;
+	 cout << "Enter an N number: ";
+		 cin >> N;
+		 cout << endl;
+		 
+		 int* pmas = new int[N];
+		 changeline(pmas, N);
+		return 0;
+	
+}
+
+//функція в LibArray.cpp
+void changeline(int* pmas, int N) {
+	int L, count = 1, numbstart, numbend;
+	cout << "Enter an L number: ";
+	cin >> L;
+	cout << endl;
+	int a1, a2 = 0;
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ") Enter a number: ";
+		cin >> pmas[i];
+		cout << endl;
+	}
+	a1 = pmas[0];
+	numbstart = 0;
+	for (int i = 1; i < N; i++)
+	{
+		a2 = a1;
+		a1 = pmas[i];
+		if (a2 == a1)
+		{
+			count++;
+		}
+		else if (a2 != a1) {
+			numbend = i - 1;
+			if (count < L)
+			{
+				pmas[numbstart] = 0;
+				for (int j = numbstart + 1; j < N, j + count - 1 < N; j++)
+				{
+					pmas[j] = pmas[j + count - 1];
+				}
+				N = N - count + 1;
+				int* temp_mas = new int[N];
+				for (int k = 0; k < N; k++)
+				{
+					temp_mas[k] = pmas[k];
+
+				}
+				delete[] pmas;
+				pmas = temp_mas;
+				i = numbstart + 1;
+				numbstart = numbstart + 1;
+				count = 1;
+
+			}
+		}
+	};
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ")" << pmas[i];
+		cout << endl;
+	}
+}
+//заголовок в LibArray.h
+void changeline(int* pmas, int N)
