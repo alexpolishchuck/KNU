@@ -1,0 +1,50 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	 int N,K;
+	 cout << "Enter an N number: ";
+		 cin >> N;
+		 cout << endl;
+		 cout << "Enter an 1<=K<=4 number: ";
+		 cin >> K;
+		 cout << endl;
+		 
+		 int* pmas = new int[N + K];
+
+		 movemass(pmas, N, K);
+		return 0;
+	
+}
+//функція в LibArray.cpp
+void movemass(int* pmas, int N, int K) {
+	int j = 1;
+	for (int i = K; i < N + K; i++)
+	{
+
+		cout << j << ") Enter a number: ";
+		cin >> pmas[i];
+		cout << endl;
+		j++;
+	}
+	for (int i = 0; i < K; i++)
+	{
+		pmas[i] = 0;
+	};
+	for (int i = 0; i < N + K; i++)
+	{
+		cout << i + 1 << ") " << pmas[i] << endl;
+
+	}
+}
+//заголовок в LibArray.h
+void movemass(int* pmas, int N, int K)
