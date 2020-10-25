@@ -1,0 +1,53 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main()
+{
+	 int N, K, M;
+	 cout << "Enter an N number: ";
+		 cin >> N;
+		 cout << endl;
+		 cout << "Enter an 1<=K<=N number: ";
+		 cin >> K;
+		 cout << endl;
+		 cout << "Enter an 1<=M<=10 number: ";
+		 cin >> M;
+		 cout << endl;
+		 int* pmas = new int[N+M];
+		 putinnull(pmas, N, K, M);
+		return 0;
+	
+}
+//функція в LibArray.cpp
+void putinnull(int*pmas,int N, int K, int M)
+{
+	for (int i = 0; i < N; i++)
+	{
+		cout << i + 1 << ") " << "Enter number: ";
+		cin >> pmas[i];
+		cout << endl;
+	};
+	for (int i = N - 1; i >= K; i--)
+	{
+		pmas[i + M] = pmas[i];
+
+	};
+	for (int i = K; i < K + M; i++)
+	{
+		pmas[i] = 0;
+	};
+	for (int i = 0; i < N + M; i++)
+	{
+		cout << pmas[i] << endl;
+	}
+};
+//заголовок в LibArray.h
+void putinnull(int*pmas,int N, int K, int M)
