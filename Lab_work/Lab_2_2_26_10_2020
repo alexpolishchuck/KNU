@@ -1,0 +1,179 @@
+#include <iostream>
+#include<math.h>
+using std::cout ;
+using std::endl;
+using std::cin;
+
+
+float mycos(int x0, int y0, int x1, int y1)
+{
+	float length, newcos,arccos;
+	length = sqrt(pow((x1 - x0), 2) + pow((y1 - y0), 2));
+	
+	newcos = x1 / length;
+	arccos = acos(newcos);
+	return arccos;
+}
+float findline(int x1, int y1, int x2, int y2, int x3, int y3)
+{
+	float line = 0;
+	line = ((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1));
+	return line;
+}
+int main()
+{
+	int N = 1;
+
+	int* xnumber = new int[N];
+	int* ynumber = new int[N];
+	for (int i = 0; i <= N; i++)
+	{
+		if (i == N)
+		{
+			N++;
+			int* temp_masx = new int[N];
+			int* temp_masy = new int[N];
+			for (int j = 0; j < N - 1; j++)
+			{
+				temp_masx[j] = xnumber[j];
+				temp_masy[j] = ynumber[j];
+			}
+			delete[] xnumber;
+			delete[] ynumber;
+			xnumber = temp_masx;
+			ynumber = temp_masy;
+		}
+		cout << "x" << i + 1 << ")" << "Enter x: ";
+		cin >> xnumber[i];
+		cout << endl;
+		cout << "y" << i + 1 << ")" << "Enter y: ";
+		cin >> ynumber[i];
+		cout << endl;
+		cout << " Continue? 1 - yes , 0 - no: ";
+		int answer;
+		cin >> answer;
+		if (answer == 0)
+			break;
+		if (answer == 1)
+			continue;
+		
+	}
+	if (N < 3) return 0;
+
+	int ymin=ynumber[0], xmin=xnumber[0] , numbi=0;
+	for (int i = 1; i < N; i++)
+	{
+		if (ynumber[i] < ymin) {
+			ymin = ynumber[i];
+			xmin = xnumber[i];
+			numbi = i;
+		}
+		else if (ynumber[i] == ymin)
+		{
+			if (xnumber[i] < xmin) {
+				ymin = ynumber[i];
+				xmin = xnumber[i];
+				numbi = i;
+			}
+		}
+	}
+	//вирізаємо з масива точку з найменшим х та у
+	int M = N - 1;
+	int* x_temp_mas = new int[M];
+	for (int k = 0; k < numbi; k++)
+	{
+		x_temp_mas[k] = xnumber[k];
+	}
+	
+	for (int k = numbi; k < M; k++) {
+
+		x_temp_mas[k] = xnumber[k+1];
+	}
+	delete[] xnumber;
+	xnumber = x_temp_mas;
+
+	
+	int* y_temp_mas = new int[M];
+	for (int k = 0; k < numbi; k++)
+	{
+		y_temp_mas[k] = ynumber[k];
+	}
+
+	for (int k = numbi; k < M; k++) {
+
+		y_temp_mas[k] = ynumber[k + 1];
+	}
+	delete[] ynumber;
+	ynumber = y_temp_mas;
+
+	int* xnumber1 = new int[N];
+	int* ynumber1 = new int[N];
+
+	xnumber1[0] = xmin;
+	ynumber1[0] = ymin;
+	//розташуємо за кутами
+	float angle, minangle;
+	int j = 0;
+	minangle = 9;
+	numbi = 0;
+	do {
+		for (int i = 0; i < M; i++)
+		{
+			angle = mycos(xmin, ymin, xnumber[i], ynumber[i]);
+
+			if (angle < minangle)
+			{
+				minangle = angle;
+				numbi = i;
+			}
+
+		}
+		j += 1;
+		xnumber1[j] = xnumber[numbi];
+		ynumber1[j] = ynumber[numbi];
+
+		for (int i = numbi; i < M, i + 1 < M; i++)
+		{
+			xnumber[i] = xnumber[i + 1];
+			ynumber[i] = ynumber[i + 1];
+
+		}
+		M -= 1;
+		minangle = 9;
+	} while (M > 0);
+
+	delete[] xnumber;
+	delete[] ynumber;
+	
+	for (int i = 0; i < N; i++)
+	{
+		cout << xnumber1[i] << " " << ynumber1[i] << endl;
+	}
+	
+	int sign;
+	for (int i = 0; i < N, i + 1 < N, i + 2 < N; i++)
+	{
+		sign = findline(xnumber1[i], ynumber1[i], xnumber1[i + 1], ynumber1[i + 1], xnumber1[i + 2], ynumber1[i + 2]);
+			if (sign > 0)
+			{
+				{
+					sign = findline(xnumber1[i], ynumber1[i], xnumber1[i + 1], ynumber1[i + 1], xnumber1[i + 2], ynumber1[i + 2]);
+					for (int j = i + 1; j < N; j++)
+					{
+						xnumber1[j] = xnumber1[j + 1];
+						ynumber1[j] = ynumber1[j + 1];
+					}
+					i = i - 1;
+					N = N - 1;
+				}while (sign<0 );
+			}
+
+	}
+	
+	for (int i = 0; i < N; i++)
+	{
+		cout << xnumber1[i] << " " << ynumber1[i] << endl;
+	}
+
+	return 0;
+}
