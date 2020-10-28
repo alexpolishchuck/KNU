@@ -1,0 +1,64 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibMatrix.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+int main() {
+    int M;
+	cout << "Enter an odd M number= ";
+	cin >> M;
+	cout << endl;
+	
+	int** mass = new int* [M];
+	for (int i = 0; i < M; i++)
+	{
+		mass[i] = new int[M];
+		for (int j = 0; j < M; j++)
+		{
+			cout << "Enter a number= ";
+			cin >> mass[i][j];
+			cout << endl;
+		}
+	};
+	readspiral(mass, M);
+    return 0;
+
+}
+//функція в LibArray.cpp
+void readspiral(int** mass, int M) {
+	int k = 0;
+	do {
+		for (int j = k; j < M; j++)
+		{
+			cout << mass[k][j];
+		}
+		cout << endl;
+		if (k < (M / 2 + 1)) {
+			for (int j = k + 1; j < M; j++)
+			{
+				cout << mass[j][M - 1];
+			}
+			cout << endl;
+			for (int j = M - 2; j > k - 1; j--)
+			{
+				cout << mass[M - 1][j];
+			}
+			cout << endl;
+			for (int j = M - 2; j > k; j--)
+			{
+				cout << mass[j][k];
+			}
+			cout << endl;
+		}
+		k++;
+		M--;
+
+
+	} while (k < (M / 2 + 2));
+}
+//заголовок в LibArray.h
+void readspiral(int** mass, int M)
