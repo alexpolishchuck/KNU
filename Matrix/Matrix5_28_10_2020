@@ -1,0 +1,46 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibMatrix.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+int main() {
+    int M, N, D;
+    cout << "Enter numbers M,N,D";
+    cin >> M >> N >> D;
+    algprogression(M, N, D);
+    return 0;
+
+}
+//функція в LibArray.cpp
+void algprogression( int M, int N, int D) {
+	int numb;
+	int** mass = new int* [M];
+	for (int i = 0; i < M; i++)
+	{
+		numb = i;
+		mass[i] = new int[N];
+
+		for (int j = 0; j < N; j++)
+		{
+
+			mass[i][j] = numb + j * D;
+
+		}
+
+	};
+	for (int i = 0; i < M; i++)
+	{
+
+		for (int j = 0; j < N; j++)
+		{
+			cout << mass[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
+//заголовок в LibArray.h
+void algprogression( int M, int N, int D)
