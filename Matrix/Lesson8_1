@@ -1,0 +1,31 @@
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibArray.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+int main() {
+    int matrix[2][3];
+    int* positive = new int[6];
+    int k = 0;
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            cout << "Enter a number= ";
+            cin >> matrix[i][j];
+            cout << endl;
+            if (matrix[i][j] > 0) {
+                positive[k] = matrix[i][j];
+                k++;
+            }
+        }
+    }
+
+    for (int i = 0; i < k; i++)
+    {
+        cout << positive[i] << endl;
+    }
+    return 0;
