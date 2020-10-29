@@ -1,0 +1,71 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibMatrix.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+int main() {
+    int M,N;
+	cout << "Enter the odd M and N numbers= ";
+	cin >> M>>N;
+	cout << endl;
+	 swaplines( M,  N);
+    return 0;
+}
+//функція в LibArray.cpp
+void swaplines(int M, int N) {
+	int** mass = new int* [M];
+	for (int i = 0; i < M; i++)
+	{
+		mass[i] = new int[N];
+		for (int j = 0; j < N; j++)
+		{
+			cout << i + 1 << ")Enter a positive number= ";
+			cin >> mass[i][j];
+			cout << endl;
+		}
+	};
+
+	int** temp_mass = new int* [M];
+
+	for (int i = 0; i < M; i++)
+	{
+		temp_mass[i] = new int[N];
+		for (int j = 0; j < N; j++)
+		{
+
+			if (i <= (M - 2) / 2)
+				temp_mass[i][j] = mass[i + (M - 2) / 2 + 1][j];
+			if (i > (M - 2) / 2)
+
+
+				temp_mass[i][j] = mass[i - 1 - (M - 2) / 2][j];
+
+		}
+
+	}
+	for (int i = 0; i < M; i++)
+	{
+		delete[] mass[i];
+	};
+	delete[] mass;
+
+	mass = temp_mass;
+	for (int i = 0; i < M; i++)
+	{
+
+		for (int j = 0; j < N; j++)
+		{
+			cout << temp_mass[i][j];
+
+
+		}
+		cout << endl;
+	};
+}
+//заголовок в LibArray.h
+
+void swaplines(int M, int N)
