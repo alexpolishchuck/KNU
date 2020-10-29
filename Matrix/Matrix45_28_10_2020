@@ -1,0 +1,81 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibMatrix.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+int main() {
+    int M,N;
+	cout << "Enter an M,N number= ";
+	cin >> M>>N;
+	cout << endl;
+	maxinorder(M, N);
+    return 0;
+}
+
+//функція в LibArray.cpp
+void maxinorder(int M, int N) {
+	int** mass = new int* [M];
+	for (int i = 0; i < M; i++)
+	{
+		mass[i] = new int[N];
+		for (int j = 0; j < N; j++)
+		{
+			cout << i + 1 << ")Enter a positive number= ";
+			cin >> mass[i][j];
+			cout << endl;
+		}
+	};
+	int  order, check = 0;
+	char maxnumb = 'a';
+	for (int j = 0; j < N; j++)
+	{
+		int max;
+		for (int i = 1; i < M; i++)
+		{
+			if (mass[i - 1][j] < mass[i][j])
+			{
+
+				check++;
+			}
+			else if (mass[i - 1][j] > mass[i][j])
+			{
+				check = check + 0;
+			}
+			else if (mass[i - 1][j] == mass[i][j])
+			{
+				check = -1;
+			};
+			if (i == 1 && mass[i - 1][j] < mass[i][j])
+			{
+				max = mass[i][j];
+			}
+			else max = mass[i - 1][j];
+			if (max < mass[i][j])
+			{
+				max = mass[i][j];
+			}
+
+		}
+		cout << "check" << check << endl;
+		if (check == 0 || check == (M - 1))
+		{
+			if (maxnumb == 'a')
+				maxnumb = max + '0';
+			else
+				if (max > maxnumb)
+					maxnumb = max + '0';
+		}
+		max = 0;
+		check = 0;
+	}
+	if (maxnumb == 'a') {
+		maxnumb = '0';
+	}
+	cout << maxnumb;
+}
+//заголовок в LibArray.h
+void maxinorder(int M, int N)
