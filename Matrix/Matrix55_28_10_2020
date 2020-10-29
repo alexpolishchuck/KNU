@@ -9,7 +9,7 @@ using std::cin;
 using std::endl;
 int main() {
     int M,N;
-	cout << "Enter the odd M and N numbers= ";
+	cout << "Enter the even M and N numbers= ";
 	cin >> M>>N;
 	cout << endl;
 	 swaplines( M,  N);
