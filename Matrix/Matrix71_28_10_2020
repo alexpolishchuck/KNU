@@ -1,0 +1,86 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibMatrix.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+int main() {
+    int M,N;
+	cout << "Enter M and N numbers= ";
+	cin >> M>>N;
+	cout << endl;
+	
+	doublecolumnmin(M, N);
+    return 0;
+}
+//функція в LibArray.cpp
+void doublecolumnmin(int M, int N) {
+	char minnumb = 'a';
+	int numbj;
+	int** mass = new int* [M];
+	for (int i = 0; i < M; i++)
+	{
+		mass[i] = new int[N];
+		for (int j = 0; j < N; j++)
+		{
+			cout << i + 1 << ")Enter a positive number= ";
+			cin >> mass[i][j];
+			cout << endl;
+			if (minnumb == 'a') {
+				minnumb = mass[i][j] + '0';
+				numbj = j;
+			}
+			else
+				if (mass[i][j] + '0' < minnumb)
+				{
+					minnumb = mass[i][j] + '0';
+					numbj = j;
+				}
+			cout << minnumb << endl;
+		}
+	};
+
+	cout << numbj << endl;
+	int** temp_mass = new int* [M];
+
+	for (int i = 0; i < M; i++)
+	{
+		temp_mass[i] = new int[N + 1];
+		for (int j = 0; j <= numbj; j++)
+		{
+
+			temp_mass[i][j] = mass[i][j];
+
+		}
+		for (int j = numbj; j < N; j++)
+		{
+
+			temp_mass[i][j + 1] = mass[i][j];
+
+		}
+	}
+	for (int i = 0; i < M; i++)
+	{
+		delete[] mass[i];
+	};
+	delete[] mass;
+	mass = temp_mass;
+
+	for (int i = 0; i < M; i++)
+	{
+
+		for (int j = 0; j < N + 1; j++)
+		{
+			cout << mass[i][j];
+
+
+		}
+		cout << endl;
+	};
+}
+//заголовок в LibArray.h
+void doublecolumnmin(int M, int N)
