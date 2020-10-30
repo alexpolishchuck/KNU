@@ -1,0 +1,56 @@
+//головний код 
+#include <iostream>
+#include<math.h>
+#include <clocale>
+#include "LibMatrix.h";
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+int main() {
+    int M;
+	cout << "Enter an M number= ";
+	cin >> M;
+	cout << endl;
+
+	resetnumbers(M);
+    return 0;
+}
+//функція в LibArray.cpp
+void resetnumbers(int M) {
+	int** mass = new int* [M];
+	for (int i = 0; i < M; i++)
+	{
+		mass[i] = new int[M];
+		for (int j = 0; j < M; j++)
+		{
+			cout << i + 1 << ")Enter a number= ";
+			cin >> mass[i][j];
+			cout << endl;
+		}
+	};
+	int N = M;
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			mass[i][j] = 0;
+
+		}
+		N--;
+		cout << endl;
+	};
+
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			cout << mass[i][j];
+
+		}
+		cout << endl;
+	};
+}
+//заголовок в LibArray.h
+void resetnumbers(int M)
