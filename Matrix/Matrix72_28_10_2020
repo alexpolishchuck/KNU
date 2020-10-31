@@ -1,0 +1,90 @@
+//головний код 
+int main() {
+    int M,N;
+	cout << "Enter  M , N numbers= ";
+	cin >> M>>N;
+	cout << endl;
+	addcolumn1(M, N);
+    return 0;
+}
+//функція в LibArray.cpp
+void addcolumn1(int M, int N) {
+		int** mass = new int* [M];
+		for (int i = 0; i < M; i++)
+		{
+			mass[i] = new int[N];
+			for (int j = 0; j < N; j++)
+			{
+				cout << i + 1 << ")Enter a number= ";
+				cin >> mass[i][j];
+				cout << endl;
+			}
+		};
+		int count = 0, numbj;
+		for (int j = 0; j < N; j++)
+		{
+
+			for (int i = 0; i < M; i++)
+			{
+				(mass[i][j] > 0) ? count++ : count + 0;
+			}
+			if (count == M)
+			{
+				numbj = j;
+				mass = changemass1(mass, M, N, numbj);
+				break;
+			}
+			count = 0;
+		};
+
+		for (int i = 0; i < M; i++)
+		{
+
+			for (int j = 0; j < N + 1; j++)
+			{
+				cout << mass[i][j];
+
+
+			}
+			cout << endl;
+		};
+    
+	};
+  
+  int** changemass1(int** mass, int M, int N, int numbj) {
+	int** temp_mass = new int* [M];
+
+	for (int i = 0; i < M; i++)
+	{
+		temp_mass[i] = new int[N + 1];
+		for (int j = 0; j <= numbj; j++)
+		{
+
+			temp_mass[i][j] = mass[i][j];
+			if (j == numbj)
+			{
+
+				temp_mass[i][j] = 1;
+
+			}
+
+		}
+		
+		for (int j = numbj+1; j < (N + 1); j++)
+		{
+
+			temp_mass[i][j] = mass[i][j-1];
+
+		}
+	}
+	for (int i = 0; i < M; i++)
+	{
+		delete[] mass[i];
+	};
+	delete[] mass;
+	mass = temp_mass;
+	return mass;
+};
+//заголовок в LibArray.h
+void addcolumn1(int M, int N);
+int** changemass1(int** mass, int M, int N, int numbj) 
