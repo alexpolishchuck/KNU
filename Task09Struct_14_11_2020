@@ -17,97 +17,19 @@ struct ZNAK
     int dateofbirth [3];
    
 };
-
+void* fillstruct(ZNAK* person);
+void* comparestruct(ZNAK* person);
 int main()
 {
-    ZNAK person[2];
-    for (int i = 0; i < 8; i++) {
-        int check = 0;
-        do {
-            check = 0;
-            int k = 0;
-            cout << "Enter name of the person" << endl;
-            cin >> person[i].name;
-            for (k=0; person[i].name[k]!='\0'; k++) {
-                if (isalpha(person[i].name[k])==0) {
-                    cin.clear();
-                    cin.ignore();
-                    check++;
-                }
-            }
-
-
-            cout << endl;
-            cout << "Enter surname of the person" << endl;
-            cin >> person[i].secname;
-            for (k = 0; person[i].secname[k] != '\0'; k++) {
-                if (isalpha(person[i].secname[k])==0) {
-                    cin.clear();
-                    cin.ignore();
-                    check++;
-                }
-            }
-            cout << endl;
-            cout << "Enter sign of the person" << endl;
-            cin >> person[i].sign;
-            for (k = 0; person[i].sign[k] != '\0'; k++) {
-                if (isalpha(person[i].sign[k])==0) {
-                    cin.clear();
-                    cin.ignore();
-                    check++;
-                }
-            }
-            cout << endl;
-            cout << "Enter date of birth of the person(day,month,year)" << endl;
-
-            for (int j = 0; j < 3; j++)
-            {
-
-                cin >> person[i].dateofbirth[j];
-                
-            }
-            cout << endl;
-            if(check>0)
-            {
-            cout << "Can't add this user to database" << endl;
-            }
-        } while (check > 0);
-    }
+    ZNAK person[8];
+    fillstruct(person);
     char sign1[100];
     cout << "Enter zodiac sign" << endl;
     cin >> sign1;
     cout << endl;
-    
-    
-
-
-    for (int i = 0; i < 7; i++)
-    {
-        for (int j = i + 1; j < 8; j++)
-    {
-            if (person[i].dateofbirth[2] > person[j].dateofbirth[2])
-            {
-                ZNAK temp = person[i];
-                person[i]= person[j];
-                person[j] = temp;
-            }
-            else if (person[i].dateofbirth[2] == person[j].dateofbirth[2] && person[i].dateofbirth[1] > person[j].dateofbirth[1])
-            {
-                ZNAK temp = person[i];
-                person[i] = person[j];
-                person[j] = temp;
-            }
-             else if (person[i].dateofbirth[2] == person[j].dateofbirth[2] && person[i].dateofbirth[1] == person[j].dateofbirth[1] && person[i].dateofbirth[0] > person[j].dateofbirth[0])
-            {
-                ZNAK temp = person[i];
-                person[i] = person[j];
-                person[j] = temp;
-            }
-    }
-    }
-
+    comparestruct(person);
     int check1 = 0;
-    for (int i = 0; i <2; i++)
+    for (int i = 0; i <8; i++)
     {
         if (*person[i].sign == *sign1)
         {
@@ -125,5 +47,90 @@ int main()
  
     if (check1 == 0)
         cout << "There are no people with this sign ";
+    return 0;
+}
+void* fillstruct(ZNAK* person)
+{
+
+    for (int i = 0; i < 8; i++) {
+        int check = 0;
+        do {
+            check = 0;
+            int k = 0;
+            cout << "Enter name of the person" << endl;
+            cin >> person[i].name;
+            for (k = 0; person[i].name[k] != '\0'; k++) {
+                if (isalpha(person[i].name[k]) == 0) {
+                    cin.clear();
+                    cin.ignore();
+                    check++;
+                }
+            }
+
+
+            cout << endl;
+            cout << "Enter surname of the person" << endl;
+            cin >> person[i].secname;
+            for (k = 0; person[i].secname[k] != '\0'; k++) {
+                if (isalpha(person[i].secname[k]) == 0) {
+                    cin.clear();
+                    cin.ignore();
+                    check++;
+                }
+            }
+            cout << endl;
+            cout << "Enter sign of the person" << endl;
+            cin >> person[i].sign;
+            for (k = 0; person[i].sign[k] != '\0'; k++) {
+                if (isalpha(person[i].sign[k]) == 0) {
+                    cin.clear();
+                    cin.ignore();
+                    check++;
+                }
+            }
+            cout << endl;
+            cout << "Enter date of birth of the person(day,month,year)" << endl;
+
+            for (int j = 0; j < 3; j++)
+            {
+
+                cin >> person[i].dateofbirth[j];
+
+            }
+            cout << endl;
+            if (check > 0)
+            {
+                cout << "Can't add this user to database" << endl;
+            }
+        } while (check > 0);
+    }
+    return 0;
+};
+void* comparestruct(ZNAK* person)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        for (int j = i + 1; j < 8; j++)
+        {
+            if (person[i].dateofbirth[2] > person[j].dateofbirth[2])
+            {
+                ZNAK temp = person[i];
+                person[i] = person[j];
+                person[j] = temp;
+            }
+            else if (person[i].dateofbirth[2] == person[j].dateofbirth[2] && person[i].dateofbirth[1] > person[j].dateofbirth[1])
+            {
+                ZNAK temp = person[i];
+                person[i] = person[j];
+                person[j] = temp;
+            }
+            else if (person[i].dateofbirth[2] == person[j].dateofbirth[2] && person[i].dateofbirth[1] == person[j].dateofbirth[1] && person[i].dateofbirth[0] > person[j].dateofbirth[0])
+            {
+                ZNAK temp = person[i];
+                person[i] = person[j];
+                person[j] = temp;
+            }
+        }
+    }
     return 0;
 }
