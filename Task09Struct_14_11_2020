@@ -21,7 +21,7 @@ struct ZNAK
 int main()
 {
     ZNAK person[2];
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 8; i++) {
         int check = 0;
         do {
             check = 0;
@@ -67,6 +67,10 @@ int main()
                 
             }
             cout << endl;
+            if(check>0)
+            {
+            cout << "Can't add this user to database" << endl;
+            }
         } while (check > 0);
     }
     char sign1[100];
@@ -77,9 +81,9 @@ int main()
     
 
 
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 7; i++)
     {
-        for (int j = i + 1; j < 2; j++)
+        for (int j = i + 1; j < 8; j++)
     {
             if (person[i].dateofbirth[2] > person[j].dateofbirth[2])
             {
