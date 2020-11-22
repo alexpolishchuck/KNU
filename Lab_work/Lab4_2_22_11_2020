@@ -1,0 +1,69 @@
+/*	Вивести на екран всі перестановки чисел від 1 до N, при яких ∀i a[i]≠i	*/
+#include <iostream>
+#include <cmath>
+#include <cstring>
+
+using namespace::std;
+void swapit(int* mass, int a, int b)
+{
+	int temp;
+	temp = mass[a];
+	mass[a] = mass[b];
+	mass[b] = temp;
+
+	
+}
+void printit(int* mass, int N)
+{
+
+	for (int i = 0; i < N; i++)
+	{
+		cout << mass[i];
+	}
+	cout << endl;
+}
+bool change(int* mass, int N)
+{
+
+	int j = N - 2;
+	while (j != -1 && mass[j] >= mass[j + 1]) j--;
+	if (j == -1) return false;
+	int k = N - 1;
+	while (mass[j] >= mass[k]) k--;
+	swapit(mass, j, k);
+		int l = j+1 , r = N - 1; 
+	while (l < r)
+		swapit(mass, l++, r--);
+	return true;
+}
+bool check(int* mass, int N)
+{
+	int checkvar=0;
+	for (int i = 0; i < N; i++)
+	{
+		if (mass[i] == i)
+			checkvar++;
+
+	}
+
+	if (checkvar > 0)
+		return false;
+	return true;
+}
+int main() 
+{
+	int N; 
+	cout << "Enter N value" << endl;
+	cin >> N;
+	cout << endl;
+	int* mass = new int[N];
+	for (int i = 0; i < N; i++)
+		mass[i] = i+1;
+	if (check(mass,N)) printit(mass, N);
+	while (change(mass, N)) 
+	{
+		if (check(mass, N))
+			printit(mass, N); }
+	
+	return 0;
+}
