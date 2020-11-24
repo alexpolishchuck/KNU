@@ -17,6 +17,7 @@ int main()
 	cout << "Enter line" << endl;
 	cin.getline(line1, 100);
 	cout << endl;
+	
 	char* line = new char[100];
 	int j = 0;
 	for (int k = 0; line1[k] != '\0'; k++)
@@ -32,15 +33,19 @@ int main()
 			checkit(line1, line, k, j);
 			
 			line[j] = sign.top();
-			line[j +1] = 32;
+			
 			sign.pop();
 			
-			if (line1[k + 1] != '\0')
+			if (line1[k ] != '\0') {
+				line[j + 1] = 32;
 				j += 2;
+			}
 
 		}
-		if (line1[k + 1] == '\0')
-			line[j] = '\0';
+		if (line1[k] == '\0') {
+			line[j + 1] = '\0';
+			k--;
+		}
 	}
 
 	cout << line << endl;
