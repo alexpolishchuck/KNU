@@ -9,10 +9,11 @@ int sum(int* mass, int& k);
 int multiplication(int* mass, int& k);
 int substraction(int* mass, int& k);
 int division(int* mass, int& k);
+void checkit(char* line1, char* line, int& k, int& j);
 int main()
 {
 	char* line1 = new char[100];
-	stack <char> sign;	
+	stack <char> sign;
 	cout << "Enter line" << endl;
 	cin.getline(line1, 100);
 	cout << endl;
@@ -22,24 +23,21 @@ int main()
 	{
 		if (line1[k] > 47 && line1[k] < 58)
 		{
-			line[j] = line1[k];
-			line[j + 1] = 32;
-			if(line1[k+1]!='\0')
-			j += 2;
+			checkit( line1,  line,  k,  j);
 		}
 		if (line1[k] == 42 || line1[k] == 43 || line1[k] == 45 || line1[k] == 47 || line1[k] == 94)
 		{
 			sign.push(line1[k]);
+			k += 2;
+			checkit(line1, line, k, j);
 			
-				line[j] = line1[k + 2];
-				line[j + 1] = 32;
-				line[j + 2] = sign.top();
-				line[j + 3] = 32;
-				sign.pop();
-				k += 2;
-				if (line1[k + 3] != '\0')
-					j += 4;
+			line[j] = sign.top();
+			line[j +1] = 32;
+			sign.pop();
 			
+			if (line1[k + 1] != '\0')
+				j += 2;
+
 		}
 		if (line1[k + 1] == '\0')
 			line[j] = '\0';
@@ -48,20 +46,20 @@ int main()
 	cout << line << endl;
 
 	int* mass = new int[100];
-	 j = 0;
+	j = 0;
 	for (int k = 0; line[j] != '\0'; k++) {
 
 		mass[k] = 0;
 		if (line[j] == 42 || line[j] == 43 || line[j] == 45 || line[j] == 47 || line[j] == 94)
 		{
-			 operation(line,j,mass,k);
-			 if (line[j + 1] != '\0')
-				 j += 2;
-			 else j++;
+			operation(line, j, mass, k);
+			if (line[j + 1] != '\0')
+				j += 2;
+			else j++;
 		}
 
-		while (line[j] != 32 && line[j] != '\0'){
-		
+		while (line[j] != 32 && line[j] != '\0') {
+
 			if (mass[k] == 0)
 				mass[k] = line[j] - '0';
 			else mass[k] = mass[k] * 10 + line[j] - '0';
@@ -70,26 +68,26 @@ int main()
 		}
 		if (line[j] == 32) j++;
 	}
-	
-		
-			cout << mass[0] << endl;
-	
+
+
+	cout << mass[0] << endl;
+
 	return 0;
 }
 
-void operation(char* line, int j, int*mass, int &k)
+void operation(char* line, int j, int* mass, int& k)
 {
 	int key;
 	switch (line[j])
 	{
 	case (42):
-		multiplication( mass, k);
+		multiplication(mass, k);
 		break;
 	case (43):
-		sum( mass,  k);
+		sum(mass, k);
 		break;
 	case (45):
-		 substraction(mass, k);
+		substraction(mass, k);
 		break;
 	case (47):
 		division(mass, k);
@@ -97,11 +95,11 @@ void operation(char* line, int j, int*mass, int &k)
 	case (94):
 		key = 5;
 		break;
-		
+
 	}
-	
+
 }
-int sum(int* mass,int &k)
+int sum(int* mass, int& k)
 {
 	mass[0] = mass[0] + mass[1];
 	mass[1] = 0;
@@ -128,4 +126,17 @@ int division(int* mass, int& k)
 	mass[1] = 0;
 	k = 1;
 	return mass[0];
+}
+void checkit(char* line1, char* line, int& k, int& j)
+{
+	while (line1[k] > 47 && line1[k] < 58)
+	{
+		line[j] = line1[k];
+		j++;
+		k++;
+	}
+	if (line1[k] == 32 || line1[k] == '\0') {
+		line[j] = 32;
+		j++;
+	}
 }
