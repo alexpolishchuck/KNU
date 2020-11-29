@@ -1,0 +1,58 @@
+/* Вилучити з тексту всі слова, які містять у собі паліндроми довжиною не менші
+за n. Записати результуючий текст у інший файл.*/
+#include <iostream>
+#include <cmath>
+#include <cstring>
+#include <fstream>
+using namespace::std;
+
+bool palindrome(char* line, int n)
+{
+	int a = 0;
+	int sizeline = 0;
+	for (int i = 0; line[i] != '\0'; i++)
+	{
+		sizeline++;
+	}
+	for (int i = 0; i < sizeline / 2; i++)
+	{
+		if (line[i] == line[sizeline - 1 - i])
+			a++;
+	}
+	if (a == sizeline/2 && sizeline>=n )
+		return true;
+	else return false;
+}
+void savenew(char* line)
+{
+	char a = 32;
+	ofstream fout;
+	fout.open("newtext.txt", ofstream::app);
+	fout << line << a;
+	fout.close();
+
+
+}
+int main()
+{
+	int n;
+	cout << "Enter n=" << endl;
+	cin >> n;
+	cout << endl;
+	ifstream fin;
+	fin.open("text.txt");
+	char line[100];
+	char a = 32;
+	while (!fin.eof()) {
+		fin >> line;
+		int k = 0;
+		for (int i = 0; line[i] != '\0'; i++)
+			k++;
+		cout <<"k="<< k<<endl;
+		if (!palindrome(line, n))
+			savenew(line);
+		
+	}
+	fin.close();
+	return 0;
+}
