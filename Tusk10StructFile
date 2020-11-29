@@ -1,0 +1,101 @@
+
+#include <iostream>
+#include <cmath>
+#include <cstring>
+#include <fstream>
+using namespace::std;
+
+struct NOTEBOOK
+{
+	struct disp_res { //разрешение
+		int x; 
+		int y;
+
+	} resolution;
+	int f;//частота регенерации 
+	int d;//диагональ дсплея
+	int price;
+	char model[21];
+};
+void addtofile(NOTEBOOK &P)
+{
+	
+	FILE* f;
+	fopen_s(&f, "newfile.txt", "ab");
+	fwrite(&P, sizeof(NOTEBOOK), 1, f);
+	
+	fclose(f);
+
+	
+}
+void addtofile2(NOTEBOOK& J)
+{
+
+	FILE* f;
+	fopen_s(&f, "laptops.txt", "ab");
+	fwrite(&J, sizeof(NOTEBOOK), 1, f);
+
+	fclose(f);
+
+
+}
+void readfile(int i)
+{
+	FILE* f;
+	fopen_s(&f, "newfile.txt", "r");
+	NOTEBOOK J;
+	fseek(f, i*sizeof(NOTEBOOK), SEEK_SET);
+	fread(&J, sizeof(J), 1, f);
+	if (J.f == 2)
+		addtofile2(J);
+	fclose(f);
+	
+}
+
+int main()
+{
+	int i = 0;
+	char key;
+	NOTEBOOK P;
+	do {
+		cout << "Enter the description of the laptop: " << endl;
+		cout << "model= ";
+		cin>>P.model;
+		cout << endl;
+		cout << "Resolution(x)= ";
+		cin >> P.resolution.x;
+		cout << endl;
+		cout << "Resolution(y)= ";
+		cin >> P.resolution.y;
+		cout << endl;
+		cout << "Amount of video memory= ";
+		cin >> P.f;
+		cout << endl;
+		cout << "clock rate= ";
+		cin >> P.d;
+		cout << endl;
+		cout << "price= ";
+		cin >> P.price;
+		cout << endl;
+		addtofile(P);
+		readfile(i);
+		cout << "continue? Y or N" << endl;
+		cin >> key;
+		cout << endl;
+		i++;
+	} while (key != 'n');
+	
+	FILE* f;
+	fopen_s(&f, "laptops.txt", "r");
+	NOTEBOOK K;
+	int k = 0;
+	while(!feof(f))
+	{
+		fseek(f, k * sizeof(NOTEBOOK), SEEK_SET);
+		fread(&K, sizeof(K), 1, f);
+		cout << K.resolution.x << " " << K.resolution.y << " " << K.f << " " << K.d << " " << K.price << " " << K.model << endl;
+		k++;
+	}
+	fclose(f);
+	return 0;
+}
