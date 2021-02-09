@@ -8,6 +8,7 @@
 using std::endl;
 using std::cout;
 using std::cin;
+using std::ofstream;
 
 struct horses
 {
@@ -545,7 +546,7 @@ void menu1(FILE *f1)
 			{
 				fread(&fileperson, sizeof(user), 1, f1);
 				if (feof(f1)) break;
-				if (strcmp(fileperson.login, person1.login) == 0)
+				if (strcmp(fileperson.login, person1.login) == 0 && fileperson.exist==true)
 				{
 					check++;
 					break;
@@ -734,7 +735,7 @@ void contest(FILE*f1)
 				fread(&fileperson, sizeof(user), 1, f1);             
 				if (feof(f1))
 					break;
-				if (fileperson.horse.numb == horse.numb)
+				if (fileperson.horse.numb == horse.numb && fileperson.exist==true)
 				{
 					fileperson.horse.bet = fileperson.horse.bet * 2;
 					fgetpos(f1, &posi);
@@ -760,7 +761,7 @@ void contest(FILE*f1)
 				fread(&fileperson, sizeof(user), 1, f1);
 				if (feof(f1))
 					break;
-				if (fileperson.horse.numb == horse.numb)
+				if (fileperson.horse.numb == horse.numb && fileperson.exist==true)
 				{
 					fileperson.horse.bet = 0;
 					fgetpos(f1, &posi);
@@ -770,9 +771,61 @@ void contest(FILE*f1)
 				}
 			}
 		}
+		
 	};
-	
+	ofstream outf;
+	outf.open("resultslist.txt", ofstream::app);
+	  SYSTEMTIME st;
+	  GetSystemTime(&st);
+	  
+	fseek(f2, 0, SEEK_SET);
+	while (!feof(f2))
+	{
+		fread(&horse, sizeof(horses), 1, f2);
+		if (feof(f2))
+			break;
+		if (horse.winner == true)
+		{
+			char line[20];
+			outf << st.wDay << "." << st.wMonth << "." << st.wYear << " The number of the horse: " << horse.numb << " The power of the horse: " << horse.power << " Coefficient: " << horse.coef << endl;
+
+
+		}
+
+	}
 	fclose(f2);
+	outf.close();
 	system("pause");
 }
-int main()
+int main() {
+	
+	user fileperson;
+	FILE* f1;
+	fopen_s(&f1, "users.txt", "r+b");
+	menu1(f1);
+	fpos_t posi;
+	char choice;
+	system("cls");
+	cout << "Do you want to start a contest?\n1.yes\n2.no" << endl;
+	choice = _getch();
+	system("cls");
+	if(choice=='1')
+	contest(f1);
+	system("cls");
+	fseek(f1, 0, SEEK_SET);
+	while (!feof(f1))
+	{
+		fread(&fileperson, sizeof(user), 1, f1);
+		if (feof(f1))
+			break;
+		cout << "Login: " << fileperson.login << endl;
+		cout << "Password: " << fileperson.password << endl;
+		cout << "Flag of existence: " << fileperson.exist << endl;
+		cout << "Admin: " << fileperson.admin << endl;
+		cout << "Horse: " << fileperson.horse.numb << endl;
+		cout << "Bet: " << fileperson.horse.bet << endl;
+		cout << "-----------" << endl;
+	}
+	fclose(f1);
+	return 0;
+}
