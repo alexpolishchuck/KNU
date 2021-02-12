@@ -304,7 +304,7 @@ void menuadmin(FILE*f1)
 	fopen_s(&f2, "horses.txt", "r+b");
 	char finduser[20];
 	user fileperson;
-	while (goback == 1) { //щоб повернутися назад САША ПРОЧИТАЙ ЦЕ ЛОЛ (будь ласка)
+	while (goback == 1) { 
 		system("cls");
 		cout << "ADMIN MENU" << endl;
 		cout << "1.Change user" << endl;
