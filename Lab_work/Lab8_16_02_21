@@ -1,1 +1,238 @@
+#include <iostream>
+#include <math.h>
+#include<fstream>
+#include<cstring>
+#include <conio.h>
+#include "windows.h"
 
+using std::endl;
+using std::cout;
+using std::cin;
+
+	typedef struct zhegalkin
+	{
+		int variables=1;
+		char* addend=new char [variables];
+		zhegalkin* next;
+		zhegalkin* prev;
+		
+	} *zhegp,zheg;
+
+	struct table
+	{
+		int variables = 1;
+		char* nullone = new char[variables];
+		bool exists = false;
+	};
+	zhegp fillzheg()
+	{
+		
+		system("cls");
+		cout << "Enter the number of the elements:" << endl;
+		int number;
+		cin >> number;
+		cin.ignore(cin.rdbuf()->in_avail());
+		cin.clear();
+		system("cls");
+		
+		zhegp t = new zheg;
+		zhegp p = new zheg;
+		zhegp first = new zheg;
+		t = p;
+		p->variables = number+1;
+		p->prev = NULL;
+		first = p;
+		cout << "Enter a new addend:" << endl;
+		
+		
+		cin.getline(p->addend, p->variables);
+		
+		if (cin.fail())
+		{
+			
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+		}
+		
+		
+		
+		char choice = '1';
+		system("cls");
+		cout << "Do you want to add another addend to your Zhegalkin polinomial?\n1.Yes\n2.No" << endl;
+		choice = _getch();
+		cin.ignore(cin.rdbuf()->in_avail());
+		cin.clear();
+		if (choice != '1')
+		{
+			p->next = NULL;
+
+		}
+		while (choice == '1')
+		{
+			
+			system("cls");
+			cout << "Enter a new addend:" << endl;
+			zhegp p = new zheg;
+			t->next = p;
+			p->prev = t;
+			p->variables = t->variables;
+			
+			
+			cin.getline(p->addend, p->variables);
+			if (cin.fail())
+			{
+				
+				cin.ignore(cin.rdbuf()->in_avail());
+				cin.clear();
+			}
+			t = p;
+
+			cout << "Do you want to add another addend to your Zhegalkin polinomial?\n1.Yes\n2.No" << endl;
+			choice = _getch();
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+			if (choice != '1')
+			{
+				p->next = NULL;
+
+			}
+
+
+		}
+
+		return p;
+	}
+	int findvalue(char* var, char* allvariables,table* const pointer1)
+	{
+		int count = 1;
+		for (int i = 0; ; i++)
+		{
+			
+			char check[2];
+			check[0]= allvariables[i];
+			check[1] = '\0';
+			if (strcmp(var, check) == 0)
+				break;
+			count++;
+		}
+		
+		count = pointer1->nullone[count-1]-'0';
+
+		return count;
+	}
+	void nextlineoftable(table* pointer1)
+	{
+		int rest = 0;
+		if (pointer1->nullone[pointer1->variables - 2] - '0' > 0)
+		{
+			pointer1->nullone[pointer1->variables - 2] = '0';
+			rest = 1;
+		}
+		else if (pointer1->nullone[pointer1->variables - 2] - '0' == 0)
+		{
+			pointer1->nullone[pointer1->variables - 2] = '1';
+			rest = 0;
+		}
+		for (int i = pointer1->variables - 3; i!=-1; i--)
+		{
+			if (pointer1->nullone[i] - '0' + rest > 1)
+			{
+				pointer1->nullone[i] = '0';
+				rest = 1;
+			}
+			else if (pointer1->nullone[i] - '0' + rest <= 1)
+			{
+				pointer1->nullone[i] = pointer1->nullone[i]-'0'+rest+'0';
+				rest = 0;
+			}
+			if (rest == 0)
+				break;
+		}
+
+	}
+	void lineoftable()
+	{
+
+	}
+	void createtable(zhegp p,int numberofvariables,char* allvariables)
+	{
+
+		FILE* f1;
+		fopen_s(&f1, "table.txt", "wb");
+		fseek(f1, 0, SEEK_SET);
+		zhegp firstaddend = p;             //beggining of the list
+		table pointer1, * pointer2;       //pointer 2?
+		pointer1.variables = numberofvariables;
+		for (int i = 0; i < pointer1.variables - 1; i++)      //first line of table (0,0,...,0)
+			pointer1.nullone[i] = '0';
+		pointer1.nullone[pointer1.variables - 1] = '\0';
+		int addendval = 1;
+		int sum = 0;                                      //sum of all the addends
+		char var;
+		char variable[2];
+		variable[1] = '\0';
+		
+		while (p)
+		{
+			for (int i = 0; p->addend[i] != '\0'; i++)
+			{
+				
+				variable[0] = p->addend[i];
+				addendval = addendval * findvalue(variable,allvariables, &pointer1); //value of the addend
+				
+			}
+			if (sum + addendval > 1)                                                //XOR
+				sum = 0;
+			else 
+			sum = sum + addendval;
+			if (p->next == NULL)
+			{
+				pointer1.exists = sum;
+				sum = 0;
+				fwrite(&pointer1, sizeof(table), 1, f1);
+				nextlineoftable(&pointer1);
+				p = firstaddend;
+				addendval = 1;
+				break;
+			}
+			else p = p->next;
+			addendval = 1;
+		}                                                        //need to make a loop
+		
+	}
+int main()
+{
+	
+	zhegp p = new zheg;
+	zhegp firstaddend = new zheg;
+	p=fillzheg();
+	firstaddend = p;
+	int numberofvariables = p->variables;
+	cout << "Enter all the variables one by one:" << endl;
+	char* allvariables = new char[numberofvariables];
+	
+	cin.getline(allvariables, numberofvariables);
+	if (cin.fail())
+	{
+		
+		cin.ignore(cin.rdbuf()->in_avail());
+		cin.clear();
+	}
+	cout << numberofvariables << endl;
+	cout << allvariables << endl;
+	while (p)
+	{
+		cout << p->addend << " " << p->variables << endl;
+		if (!p->next)
+			break;
+		p = p->next;
+		
+	}
+	system("pause");
+	system("cls");
+
+	p = firstaddend;
+	createtable(p, numberofvariables,allvariables);
+
+	return 0;
+}
