@@ -11,7 +11,7 @@ using std::cin;
 
 	typedef struct zhegalkin
 	{
-		int variables=1;
+		int variables=101;
 		char* addend=new char [variables];
 		zhegalkin* next;
 		zhegalkin* prev;
@@ -20,89 +20,65 @@ using std::cin;
 
 	struct table
 	{
-		int variables = 1;
-		char* nullone = new char[variables];
 		bool exists = false;
 	};
-	zhegp fillzheg()
+
+	typedef struct fulldnf
+	{
+		int variables = 201;
+		char* addend = new char[variables];
+		fulldnf* next;
+		fulldnf* prev;
+
+	} *fdnfp, fdnf;
+	zhegp fillzheg(char* allvariables, char* line, int number)
 	{
 		
 		system("cls");
-		cout << "Enter the number of the elements:" << endl;
-		int number;
-		cin >> number;
-		cin.ignore(cin.rdbuf()->in_avail());
-		cin.clear();
-		system("cls");
-		
+		int count;
 		zhegp t = new zheg;
 		zhegp p = new zheg;
 		zhegp first = new zheg;
-		t = p;
-		p->variables = number+1;
-		p->prev = NULL;
-		first = p;
-		cout << "Enter a new addend:" << endl;
-		
-		
-		cin.getline(p->addend, p->variables);
-		
-		if (cin.fail())
+		t = NULL;
+		count = 0;
+		for (int i = 0; line[i] != '\0'; i++)
 		{
-			
-			cin.ignore(cin.rdbuf()->in_avail());
-			cin.clear();
-		}
-		
-		
-		
-		char choice = '1';
-		system("cls");
-		cout << "Do you want to add another addend to your Zhegalkin polinomial?\n1.Yes\n2.No" << endl;
-		choice = _getch();
-		cin.ignore(cin.rdbuf()->in_avail());
-		cin.clear();
-		if (choice != '1')
-		{
-			p->next = NULL;
-
-		}
-		while (choice == '1')
-		{
-			
-			system("cls");
-			cout << "Enter a new addend:" << endl;
-			zhegp p = new zheg;
-			t->next = p;
-			p->prev = t;
-			p->variables = t->variables;
-			
-			
-			cin.getline(p->addend, p->variables);
-			if (cin.fail())
+			if (line[i] == '+')
 			{
+				p->addend[count] = '\0';
 				
-				cin.ignore(cin.rdbuf()->in_avail());
-				cin.clear();
+				p->variables = number ;
+				if (t != NULL)
+				{
+					p->prev = t;
+					t->next = p;
+				}
+				if (t == NULL) 
+				{
+					p->prev = NULL;
+					first = p;
+				}
+				t = p;
+				 p = new zheg;
+				i++;
+				count = 0;
 			}
-			t = p;
-
-			cout << "Do you want to add another addend to your Zhegalkin polinomial?\n1.Yes\n2.No" << endl;
-			choice = _getch();
-			cin.ignore(cin.rdbuf()->in_avail());
-			cin.clear();
-			if (choice != '1')
-			{
-				p->next = NULL;
-
-			}
-
+			
+			p->addend[count] = line[i];
+			count++;
 
 		}
+		p->addend[count] = '\0';
+		p->prev = t;
+		p->variables = number ;
+		if (t != NULL)
+			t->next = p;
+		p->next = NULL;
+		p = first;
 
 		return p;
 	}
-	int findvalue(char* var, char* allvariables,table* const pointer1)
+	int findvalue(char* var, char* allvariables,table* pointer1,char* nullone)
 	{
 		int count = 1;
 		for (int i = 0; ; i++)
@@ -116,33 +92,33 @@ using std::cin;
 			count++;
 		}
 		
-		count = pointer1->nullone[count-1]-'0';
+		count = nullone[count-1]-'0';
 
 		return count;
 	}
-	void nextlineoftable(table* pointer1)
+	void nextlineoftable(char* nullone,int numberofvariables)
 	{
 		int rest = 0;
-		if (pointer1->nullone[pointer1->variables - 2] - '0' > 0)
+		if (nullone[numberofvariables - 2] - '0' > 0)
 		{
-			pointer1->nullone[pointer1->variables - 2] = '0';
+			nullone[numberofvariables - 2] = '0';
 			rest = 1;
 		}
-		else if (pointer1->nullone[pointer1->variables - 2] - '0' == 0)
+		else if (nullone[numberofvariables - 2] - '0' == 0)
 		{
-			pointer1->nullone[pointer1->variables - 2] = '1';
+			nullone[numberofvariables - 2] = '1';
 			rest = 0;
 		}
-		for (int i = pointer1->variables - 3; i!=-1; i--)
+		for (int i = numberofvariables - 3; i!=-1; i--)
 		{
-			if (pointer1->nullone[i] - '0' + rest > 1)
+			if (nullone[i] - '0' + rest > 1)
 			{
-				pointer1->nullone[i] = '0';
+				nullone[i] = '0';
 				rest = 1;
 			}
-			else if (pointer1->nullone[i] - '0' + rest <= 1)
+			else if (nullone[i] - '0' + rest <= 1)
 			{
-				pointer1->nullone[i] = pointer1->nullone[i]-'0'+rest+'0';
+				nullone[i] = nullone[i]-'0'+rest+'0';
 				rest = 0;
 			}
 			if (rest == 0)
@@ -150,74 +126,347 @@ using std::cin;
 		}
 
 	}
-	void lineoftable()
-	{
-
-	}
-	void createtable(zhegp p,int numberofvariables,char* allvariables)
-	{
-
-		FILE* f1;
-		fopen_s(&f1, "table.txt", "wb");
-		fseek(f1, 0, SEEK_SET);
-		zhegp firstaddend = p;             //beggining of the list
-		table pointer1, * pointer2;       //pointer 2?
-		pointer1.variables = numberofvariables;
-		for (int i = 0; i < pointer1.variables - 1; i++)      //first line of table (0,0,...,0)
-			pointer1.nullone[i] = '0';
-		pointer1.nullone[pointer1.variables - 1] = '\0';
+	void lineoftable(zhegp p, char* allvariables, table* pointer1,FILE*f1, zhegp firstaddend,char* nullone,int numberofvariables)
+	{         
 		int addendval = 1;
 		int sum = 0;                                      //sum of all the addends
-		char var;
 		char variable[2];
 		variable[1] = '\0';
-		
+
 		while (p)
 		{
 			for (int i = 0; p->addend[i] != '\0'; i++)
 			{
-				
+
 				variable[0] = p->addend[i];
-				addendval = addendval * findvalue(variable,allvariables, &pointer1); //value of the addend
-				
+				addendval = addendval * findvalue(variable, allvariables, pointer1, nullone); //value of the addend
+
 			}
 			if (sum + addendval > 1)                                                //XOR
 				sum = 0;
-			else 
-			sum = sum + addendval;
+			else
+				sum = sum + addendval;
 			if (p->next == NULL)
 			{
-				pointer1.exists = sum;
+				pointer1->exists = sum;
 				sum = 0;
-				fwrite(&pointer1, sizeof(table), 1, f1);
-				nextlineoftable(&pointer1);
+				fwrite(pointer1, sizeof(table), 1, f1);                                
+				nextlineoftable(nullone, numberofvariables);
 				p = firstaddend;
 				addendval = 1;
 				break;
 			}
 			else p = p->next;
 			addendval = 1;
-		}                                                        //need to make a loop
+		}                                                        
 		
+		
+	}
+	bool checkline(char* nullone)
+	{
+		for (int i = 0; nullone[i] != '\0'; i++)
+		{
+			if (nullone[i] == '1')
+			{
+				return true;
+			}
+		}
+
+		
+		return false;
+
+	}
+	void createtable(zhegp p,int numberofvariables,char* allvariables)
+	{
+
+		FILE* f1;
+		fopen_s(&f1, "table.dat", "wb");       
+		fseek(f1, 0, SEEK_SET);
+		zhegp firstaddend = p;             //beggining of the list
+		table pointer1;
+		table pointer2;
+		char* nullone = new char[numberofvariables];
+		for (int i = 0; i < numberofvariables - 1; i++)      //first line of table (0,0,...,0)
+			nullone[i] = '0';
+		nullone[numberofvariables - 1] = '\0';
+		int addendval = 1;
+		int sum = 0;                                      //sum of all the addends
+		char variable[2];
+		variable[1] = '\0';
+		while (p)
+		{
+			for (int i = 0; p->addend[i] != '\0'; i++)
+			{
+
+				variable[0] = p->addend[i];
+				addendval = addendval * findvalue(variable, allvariables, &pointer1, nullone); //value of the addend
+
+			}
+			if (sum + addendval > 1)                                                //XOR
+				sum = 0;
+			else
+				sum = sum + addendval;
+			if (p->next == NULL)
+			{
+				pointer1.exists = sum;
+				sum = 0;
+				
+				fwrite(&pointer1, sizeof(table), 1, f1); 
+				table check1;
+				nextlineoftable(nullone, numberofvariables);
+				p = firstaddend;
+				addendval = 1;
+				break;
+			}
+			else p = p->next;
+			addendval = 1;
+		}
+		while (checkline(nullone))
+		{
+			lineoftable(p, allvariables, &pointer1, f1, firstaddend, nullone, numberofvariables);
+			                                                      
+		}
+		fclose(f1);
+		FILE* f2;                                                         
+		fopen_s(&f2, "table.dat", "rb");
+		fseek(f2, 0, SEEK_SET);
+		system("cls");
+		while (!feof(f2))
+		{
+			fread(&pointer2, sizeof(table), 1, f2);
+			if (feof(f2))
+				break;
+			cout << pointer2.exists << endl;
+
+		}
+		fclose(f2);
+	}
+	fdnfp createfdnf(char*nullone, char* allvariables, int numberofvariables)
+	{
+		int count = 0;
+		fdnfp p = new fdnf;
+		for (int i = 0; nullone[i] != '\0'; i++)
+		{
+			if (nullone[i] == '0')
+			{
+				p->addend[count] = '~';
+				count++;
+				p->addend[count] = allvariables[i];
+				count++;
+
+			}
+			else
+				if (nullone[i] == '1')
+				{
+					p->addend[count] = allvariables[i];
+					count++;
+				}
+
+		}
+		p->addend[count] = '\0';
+
+
+		return p;
+	}
+	void changep(fdnfp p, int i,char* deleteline2)
+	{
+		int j;
+		if (deleteline2[0] == '~')
+		{
+
+			for (j = i - 1; p->addend[j + 3] != '\0'; j++)
+			{
+				p->addend[j] = p->addend[j + 2];
+				if (p->addend[j + 2] == '\0')
+				{
+					p->addend[j] = p->addend[j + 2];
+					break;
+				}
+				p->addend[j + 1] = p->addend[j + 3];
+			}
+			if (p->addend[j + 3] == '\0')
+			{
+				p->addend[j] = p->addend[j + 2];
+				p->addend[j + 1] = p->addend[j + 3];
+			}
+
+		}
+		else
+		{
+			for (j = i; p->addend[j + 1] != '\0'; j++)
+			{
+				p->addend[j] = p->addend[j + 1];
+
+			}
+			p->addend[j] = '\0';
+		}
+	}
+	int checkforsimilarelements(fdnfp p, fdnfp *t, char* allvariables, int numberofvariables)
+	{
+		int count = 0;
+		char line1[3];
+		line1[2] = '\0';
+		char line2[3];
+		line2[2] = '\0';
+		int j = -1;
+		char deleteline2[3];
+		deleteline2[2]='\0';
+		for (int i = 0; p->addend[i] != '\0'; i++)
+		{
+			j++;
+			if (p->addend[i] == '~')
+			{
+				line1[0] = p->addend[i];
+				i++;
+				line1[1] = p->addend[i];
+				line1[2] = '\0';
+			}
+			else
+			{
+				line1[0] = p->addend[i];
+				line1[1] = '\0';
+			}
+
+			
+				if ((*t)->addend[j] == '~')
+				{
+					line2[0] = (*t)->addend[j];
+					j++;
+					line2[1] = (*t)->addend[j];
+					line2[2] = '\0';
+				}
+				else
+				{
+					line2[0] = (*t)->addend[j];
+					line2[1] = '\0';
+				}
+
+				if (strcmp(line1, line2) != 0)
+				{
+					count++;
+					strcpy_s(deleteline2, line1);
+				}
+
+			
+				
+		}
+		if (count == 1)
+		{
+			for (int i = 0; p->addend[i] != '\0'; i++)
+			{
+
+				if (p->addend[i] == '~')
+				{
+					line1[0] = p->addend[i];
+					i++;
+					line1[1] = p->addend[i];
+					line1[2] = '\0';
+				}
+				else
+				{
+					line1[0] = p->addend[i];
+					line1[1] = '\0';
+				}
+				if (strcmp(line1, deleteline2) == 0)
+				{
+					((*t)->prev)->next = (*t)->next;
+					if((*t)->next!=NULL)
+					((*t)->next)->prev = (*t)->prev;
+					fdnfp* temporary = new fdnfp;
+					*temporary = (*t)->prev;
+					delete (*t);
+					(*t) = *temporary;
+					changep(p, i, deleteline2);
+					count = 1;
+					break;
+
+
+				}
+
+			}
+
+		}
+		
+		j =0 ;
+	
+		return count;
+	}
+	void transformtodnf(fdnfp p, char* allvariables, int numberofvariables)
+	{
+
+		fdnfp first = new fdnf;
+		fdnfp t = new fdnf;
+		first = p;
+		int check=0;
+		for (int i = 0; ; )                        //shortenning
+		{
+			if (p->next == NULL)
+				break;
+			t = p->next;
+
+			while (i==0) 
+			{
+				check =  checkforsimilarelements(p, &t, allvariables, numberofvariables);
+				if (t->next == NULL || check==1)
+					break;
+				t = t->next;
+			}
+			if (p->next != NULL)
+				p = p->next;
+			else
+				break;
+		}
+
+
 	}
 int main()
 {
 	
 	zhegp p = new zheg;
 	zhegp firstaddend = new zheg;
-	p=fillzheg();
-	firstaddend = p;
-	int numberofvariables = p->variables;
-	cout << "Enter all the variables one by one:" << endl;
-	char* allvariables = new char[numberofvariables];
-	
-	cin.getline(allvariables, numberofvariables);
+	table pointer1;                                     
+	cout << "Enter the line:" << endl;
+	char line[101];
+	cin.getline(line, 101);
 	if (cin.fail())
 	{
-		
 		cin.ignore(cin.rdbuf()->in_avail());
 		cin.clear();
 	}
+
+	int count = 0;
+	char allvariables[101];
+	allvariables[count] = line[count];
+	count++;
+	int check = 0;
+	for (int i = 1; line[i] != '\0'; i++)
+	{
+		for (int j = 0; j < count; j++)
+		{
+			if (allvariables[j] == line[i])
+			{
+				check++;
+				break;
+			}
+
+		}
+		if (check == 0 && line[i] != '+')
+		{
+			allvariables[count] = line[i];
+			count++;
+		}
+		check = 0;
+	}
+	allvariables[count] = '\0';
+	int numberofvariables = 1;
+
+	for (int i = 0; allvariables[i] != '\0'; i++)
+		numberofvariables++;
+
+	p=fillzheg(allvariables, line, numberofvariables);
+	firstaddend = p;
+	
+	
 	cout << numberofvariables << endl;
 	cout << allvariables << endl;
 	while (p)
@@ -233,6 +482,88 @@ int main()
 
 	p = firstaddend;
 	createtable(p, numberofvariables,allvariables);
+	system("pause");
+	system("cls");
+	p = firstaddend;
+	zhegp t = new zheg;
+	while (p)
+	{
+		if (p->next == NULL) 
+		{
+			delete p;
+			break;
+		}
+		else
+		{
+			t = p->next;
+			delete p;
+			p = t;
+		}
+	}
+	char* nullone = new char[numberofvariables];
+	for (int i = 0; i < numberofvariables - 1; i++)   
+		nullone[i] = '0';
+	nullone[numberofvariables - 1] = '\0';
 
+	FILE* f1;
+	fopen_s(&f1, "table.dat", "rb");
+
+	fdnfp p1 = new fdnf;
+	fdnfp t1 = new fdnf;
+	fdnfp firstaddend1 = new fdnf;
+	t1 = NULL;
+	while (!feof(f1))
+	{
+		fread(&pointer1, sizeof(table), 1, f1);
+		if (feof(f1))
+			break;
+		if (pointer1.exists == 1)
+		{
+			p1 = createfdnf(nullone, allvariables, numberofvariables);
+			if (t1 != NULL) 
+			{
+				p1->prev = t1;
+				t1->next = p1;
+				t1 = p1;
+			}
+			else
+			{
+				p1->prev = NULL;
+				t1 = p1;
+				firstaddend1 = p1;
+			}
+
+
+		}
+		nextlineoftable(nullone, numberofvariables);
+
+	}
+	p1->next = NULL;
+	p1 = firstaddend1;
+	system("cls");
+	for(int i=0; ; )
+	{
+		cout << p1->addend << endl;
+
+		if (p1->next == NULL)
+			break;
+		else
+			p1 = p1->next;
+	}
+	p1 = firstaddend1;
+	system("pause");
+	transformtodnf(p1, allvariables, numberofvariables);
+	
+	p1 = firstaddend1;
+	system("cls");
+	for (int i = 0; ; )
+	{
+		cout << p1->addend << endl;
+
+		if (p1->next == NULL)
+			break;
+		else
+			p1 = p1->next;
+	}
 	return 0;
 }
