@@ -240,6 +240,7 @@ using std::cin;
 
 		}
 		fclose(f2);
+		                                                                               //delete zheg
 	}
 	fdnfp createfdnf(char*nullone, char* allvariables, int numberofvariables)
 	{
@@ -467,7 +468,7 @@ int main()
 	firstaddend = p;
 	
 	
-	cout << numberofvariables << endl;
+	cout << numberofvariables << endl;                              //check record
 	cout << allvariables << endl;
 	while (p)
 	{
@@ -486,7 +487,7 @@ int main()
 	system("cls");
 	p = firstaddend;
 	zhegp t = new zheg;
-	while (p)
+	while (p)                                                    //delete zheg
 	{
 		if (p->next == NULL) 
 		{
@@ -501,7 +502,8 @@ int main()
 		}
 	}
 	char* nullone = new char[numberofvariables];
-	for (int i = 0; i < numberofvariables - 1; i++)   
+
+	for (int i = 0; i < numberofvariables - 1; i++)             //emphasize
 		nullone[i] = '0';
 	nullone[numberofvariables - 1] = '\0';
 
@@ -512,7 +514,7 @@ int main()
 	fdnfp t1 = new fdnf;
 	fdnfp firstaddend1 = new fdnf;
 	t1 = NULL;
-	while (!feof(f1))
+	while (!feof(f1))                                       //create dnf
 	{
 		fread(&pointer1, sizeof(table), 1, f1);
 		if (feof(f1))
