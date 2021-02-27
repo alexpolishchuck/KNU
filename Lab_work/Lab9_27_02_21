@@ -1,0 +1,103 @@
+#include <iostream>
+#include <math.h>
+
+using std::cin;
+using std::cout;
+using std::endl;
+
+typedef struct matrix
+{
+	int value;
+	matrix *next;
+	matrix* prev;
+	matrix* first;
+} *matp,mat;
+
+char* createnumb(char* ch, matp *element,FILE*f1)
+{
+	(*element)->value = ch[0] - '0';
+	fgets(ch, 2, f1);
+	while (ch[0] != 32 && !feof(f1) && ch[0]!='\n')
+	{
+		(*element)->value = (*element)->value * 10 + ch[0] - '0';
+		fgets(ch, 2, f1);
+	}
+
+
+
+	return ch;
+}
+int main()
+{
+	FILE* f1;                                   //open file to scan the matrix
+	fopen_s(&f1, "matrix.txt", "r");
+	char ch[2];                                 //symbol by symbol
+
+	matp* matrix1[100];
+	for (int i = 0; i < 100; i++)
+	{
+		matrix1[i] = new matp;
+		(*matrix1[i]) = NULL;
+	}
+	
+	int count = 0;
+
+	matp element1 = new mat;
+	matp element2 = new mat;
+	fseek(f1, 0, SEEK_SET);
+	while (!feof(f1))
+	{
+		fgets(ch, 2, f1);
+		if (feof(f1))
+		{
+			
+			break;
+		}
+		if (*matrix1[count] == NULL)
+		{
+			(*matrix1[count]) = new mat;
+			(*matrix1[count])->first = (*matrix1[count]);              //first iteration
+			(*matrix1[count])->prev = NULL;
+			createnumb(ch, matrix1[count], f1);
+			element2 = (*matrix1[count]);
+		}
+		else 
+		{
+			if (ch[0] > 48 && ch[0] < 58)
+			{
+				element1 = new mat;
+				createnumb(ch, &element1, f1);
+				element1->first = element2->first;
+				element1->prev = element2;
+				element2->next = element1;
+				element2 = element1;
+			}
+		}
+		if (ch[0] == '\n')
+		{
+			count++;
+			element1->next = NULL;
+
+		}
+	}
+	element1->next = NULL;
+	
+	for (int i = 0; i <= count; i++)
+	{
+		element1 = (*matrix1[i]);
+		while (*matrix1[count])
+		{
+			cout << element1->value << " ";                      //checkfunc
+			if (element1->next == NULL)
+				break;
+			else
+				element1 = element1->next;
+
+
+		}
+		cout << endl;
+
+	}
+	fclose(f1);
+	return 0;
+}
