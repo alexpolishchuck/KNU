@@ -8,16 +8,24 @@ using std::endl;
 typedef struct matrix
 {
 	int value;
-	matrix *next;
+	matrix* next;
 	matrix* prev;
 	matrix* first;
-} *matp,mat;
+} *matp, mat;
 
-char* createnumb(char* ch, matp *element,FILE*f1)
+typedef struct matrixshort
+{
+	int value;
+	matrixshort* next;
+	int row;
+	int column;
+	matrixshort* first;
+} *matshortp, matshort;
+char* createnumb(char* ch, matp* element, FILE* f1)
 {
 	(*element)->value = ch[0] - '0';
 	fgets(ch, 2, f1);
-	while (ch[0] != 32 && !feof(f1) && ch[0]!='\n')
+	while (ch[0] != 32 && !feof(f1) && ch[0] != '\n')
 	{
 		(*element)->value = (*element)->value * 10 + ch[0] - '0';
 		fgets(ch, 2, f1);
@@ -26,6 +34,56 @@ char* createnumb(char* ch, matp *element,FILE*f1)
 
 
 	return ch;
+}
+void readmatrix()
+{
+
+
+
+
+
+
+
+
+
+
+
+}
+void menu(char*choice)
+
+{
+	switch (choice[0])
+	{
+	case ('1'):
+		readmatrix();
+
+
+	}
+	/*char choice[2];
+	choice[0] = '1';
+	choice[1] = '\0';
+	while (choice[0] != 27)
+	{
+
+
+
+
+		system("cls");
+		cout << "Choose the function" << endl;
+		cout << "1.Read matrix from the file\n2.Transform the matrix to coherently connected list" << endl;
+		char choice[2];
+		choice[1] = '\0';
+		cin.getline(choice, 2);
+		if (cin.fail())
+		{
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+		}
+
+
+
+	}*/
+
 }
 int main()
 {
@@ -39,7 +97,7 @@ int main()
 		matrix1[i] = new matp;
 		(*matrix1[i]) = NULL;
 	}
-	
+
 	int count = 0;
 
 	matp element1 = new mat;
@@ -50,7 +108,7 @@ int main()
 		fgets(ch, 2, f1);
 		if (feof(f1))
 		{
-			
+
 			break;
 		}
 		if (*matrix1[count] == NULL)
@@ -61,9 +119,9 @@ int main()
 			createnumb(ch, matrix1[count], f1);
 			element2 = (*matrix1[count]);
 		}
-		else 
+		else
 		{
-			if (ch[0] > 48 && ch[0] < 58)
+			if (ch[0] > 47 && ch[0] < 58)
 			{
 				element1 = new mat;
 				createnumb(ch, &element1, f1);
@@ -81,7 +139,7 @@ int main()
 		}
 	}
 	element1->next = NULL;
-	
+
 	for (int i = 0; i <= count; i++)
 	{
 		element1 = (*matrix1[i]);
@@ -99,5 +157,73 @@ int main()
 
 	}
 	fclose(f1);
+
+	//FILE* f2;                                                  //delete
+	//fopen_s(&f2, "matrix1.txt", "wb");
+	//fseek(f2, 0, SEEK_SET);
+	//
+	//for (int i = 0; i <= count; i++)
+	//{
+	//	element2 = (*matrix1[i]);
+	//	while (element2) 
+	//	{
+	//		fwrite(element2, sizeof(matrix), 1, f2);
+	//		if (element2->next == NULL)
+	//			break;
+	//		else element2 = element2->next;
+	//	}
+
+	//}
+	//fclose(f2);
+
+
+	matshortp t1 = new matshort;                              //coherent connected line
+	matshortp t2 = new matshort;
+	t2 = NULL;
+	int newcount = 1;
+	for (int i = 0; i <= count; i++)
+	{
+		element2 = (*matrix1[i]);
+		newcount = 1;
+		while (element2)
+		{
+			if (element2->value != 0)
+			{
+
+				t1 = new matshort;
+				if (t2 == NULL)
+					t1->first = t1;
+				else
+				{
+					t1->first = t2->first;
+					t2->next = t1;
+				}
+				t1->value = element2->value;
+				t1->column = newcount;
+				t1->row = i + 1;
+				t2 = t1;
+			}
+			if (element2->next == NULL)
+				break;
+			else
+			{
+				element2 = element2->next;
+				newcount++;
+			}
+		}
+
+	}
+	t1->next = NULL;
+	t1 = t1->first;
+	cout << "-------------------------" << endl;
+	while (t1)
+	{
+		cout << t1->value << " " << "Row=" << t1->row << " " << "Column=" << t1->column << endl;
+		if (t1->next == NULL)
+			break;
+		else
+			t1 = t1->next;
+
+	}
 	return 0;
 }
