@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include "conio.h"
 
 using std::cin;
 using std::cout;
@@ -21,6 +22,9 @@ typedef struct matrixshort
 	int column;
 	matrixshort* first;
 } *matshortp, matshort;
+
+//typedef struct 
+
 char* createnumb(char* ch, matp* element, FILE* f1)
 {
 	(*element)->value = ch[0] - '0';
@@ -35,73 +39,12 @@ char* createnumb(char* ch, matp* element, FILE* f1)
 
 	return ch;
 }
-void readmatrix()
-{
 
-
-
-
-
-
-
-
-
-
-
-}
-void menu(char*choice)
-
-{
-	switch (choice[0])
-	{
-	case ('1'):
-		readmatrix();
-
-
-	}
-	/*char choice[2];
-	choice[0] = '1';
-	choice[1] = '\0';
-	while (choice[0] != 27)
-	{
-
-
-
-
-		system("cls");
-		cout << "Choose the function" << endl;
-		cout << "1.Read matrix from the file\n2.Transform the matrix to coherently connected list" << endl;
-		char choice[2];
-		choice[1] = '\0';
-		cin.getline(choice, 2);
-		if (cin.fail())
-		{
-			cin.ignore(cin.rdbuf()->in_avail());
-			cin.clear();
-		}
-
-
-
-	}*/
-
-}
-int main()
+void readmatrix(matp* matrix1[100], matp element1, matp element2,int* count)
 {
 	FILE* f1;                                   //open file to scan the matrix
 	fopen_s(&f1, "matrix.txt", "r");
 	char ch[2];                                 //symbol by symbol
-
-	matp* matrix1[100];
-	for (int i = 0; i < 100; i++)
-	{
-		matrix1[i] = new matp;
-		(*matrix1[i]) = NULL;
-	}
-
-	int count = 0;
-
-	matp element1 = new mat;
-	matp element2 = new mat;
 	fseek(f1, 0, SEEK_SET);
 	while (!feof(f1))
 	{
@@ -111,13 +54,13 @@ int main()
 
 			break;
 		}
-		if (*matrix1[count] == NULL)
+		if (*matrix1[*count] == NULL)
 		{
-			(*matrix1[count]) = new mat;
-			(*matrix1[count])->first = (*matrix1[count]);              //first iteration
-			(*matrix1[count])->prev = NULL;
-			createnumb(ch, matrix1[count], f1);
-			element2 = (*matrix1[count]);
+			(*matrix1[*count]) = new mat;
+			(*matrix1[*count])->first = (*matrix1[*count]);              //first iteration
+			(*matrix1[*count])->prev = NULL;
+			createnumb(ch, matrix1[*count], f1);
+			element2 = (*matrix1[*count]);
 		}
 		else
 		{
@@ -133,17 +76,17 @@ int main()
 		}
 		if (ch[0] == '\n')
 		{
-			count++;
+			(*count)++;
 			element1->next = NULL;
 
 		}
 	}
 	element1->next = NULL;
 
-	for (int i = 0; i <= count; i++)
+	for (int i = 0; i <= *count; i++)
 	{
 		element1 = (*matrix1[i]);
-		while (*matrix1[count])
+		while (*matrix1[*count])
 		{
 			cout << element1->value << " ";                      //checkfunc
 			if (element1->next == NULL)
@@ -158,30 +101,24 @@ int main()
 	}
 	fclose(f1);
 
-	//FILE* f2;                                                  //delete
-	//fopen_s(&f2, "matrix1.txt", "wb");
-	//fseek(f2, 0, SEEK_SET);
-	//
-	//for (int i = 0; i <= count; i++)
-	//{
-	//	element2 = (*matrix1[i]);
-	//	while (element2) 
-	//	{
-	//		fwrite(element2, sizeof(matrix), 1, f2);
-	//		if (element2->next == NULL)
-	//			break;
-	//		else element2 = element2->next;
-	//	}
-
-	//}
-	//fclose(f2);
 
 
+
+
+
+
+
+
+
+}
+
+void cohshort(matp* matrix1[100], matp element2, int* count)
+{
 	matshortp t1 = new matshort;                              //coherent connected line
 	matshortp t2 = new matshort;
 	t2 = NULL;
 	int newcount = 1;
-	for (int i = 0; i <= count; i++)
+	for (int i = 0; i <= *count; i++)
 	{
 		element2 = (*matrix1[i]);
 		newcount = 1;
@@ -225,5 +162,150 @@ int main()
 			t1 = t1->next;
 
 	}
+
+	/*element2 = (*matrix1[0]);*/ 
+	matp element1 = new mat;
+	/*element1 = element2;*/
+	for (int i = 0; i <= *count; i++)                 //to delete matrix1
+	{
+		element2 = (*matrix1[i]);
+		element1 = element2;
+		while (element1)
+		{
+			element2 = element1;
+			if(element2->next != NULL)
+			element1 = element2->next;
+			else
+			{
+				delete element2;
+				break;
+
+			}
+			delete element2;
+		}
+
+	}
+	
+	
+	
+
+
+}
+
+void cohshortindex(matp* matrix1[100], int* count)
+{
+	matp element1 = new mat;
+	matp element2 = new mat;
+
+	for (int i = 0; i <= *count; i++)
+	{
+		element2 = (*matrix1[i]);
+		element1 = element2;
+		while (element1!=NULL)
+		{
+			element2 = element1;
+			/*if (element2 == NULL)
+				break;*/
+			if (element2->value == 0)
+			{
+				element1 = element2->next;
+
+				if (element1 != NULL)
+				element1->prev = element2->prev;
+
+				if (element2->prev != NULL)
+					(element2->prev)->next = element1;
+				                                            //what if the first element value is null? check it
+				else
+					if (element1 != NULL)
+						(*matrix1[i]) = element1;
+					/*else
+					{
+						*count--;
+						delete element2;
+					}*/
+				delete element2;
+
+			}
+			else
+				element1 = element2->next;
+			if (element1 == NULL)
+				break;
+			
+		}
+
+
+	}
+	cout << "---------------------" << endl;
+	for (int i = 0; i <= *count; i++)
+	{
+		element1 = (*matrix1[i]);
+		while (*matrix1[*count] )
+		{
+			cout << element1->value << " ";                      //checkfunc
+			if (element1->next == NULL)
+				break;
+			else
+				element1 = element1->next;
+
+
+		}
+		cout << endl;
+
+	}
+	/*delete element1;
+	delete element2;*/
+
+}
+
+int main()
+{
+	
+
+	matp* matrix1[100];
+	for (int i = 0; i < 100; i++)
+	{
+		matrix1[i] = new matp;
+		(*matrix1[i]) = NULL;
+	}
+
+	int count = 0;
+	matp element1 = new mat;
+	matp element2 = new mat;
+	
+	char choice='1';
+	while (choice == '1') {
+		cout << "choose 1 ,2 ,3" << endl;
+		choice = _getch();
+		if (cin.fail())
+		{
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+		}
+		switch (choice)
+		{
+		case ('1'):
+			readmatrix(matrix1, element1, element2, &count);
+			break;
+		case('2'):
+			cohshort(matrix1, element2, &count);
+			break;
+		case('3'):
+			cohshortindex(matrix1, &count);
+			break;
+		}
+		cout << "continue? 1,2" << endl;
+		choice = _getch();
+		if (cin.fail())
+		{
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+		}
+	}
+	/*readmatrix(matrix1, element1, element2, &count);
+	cohshort(matrix1, element2, &count);
+	cohshortindex(matrix1, &count);*/
+
+	
 	return 0;
 }
