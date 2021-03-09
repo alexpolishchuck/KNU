@@ -23,7 +23,17 @@ typedef struct matrixshort
 	matrixshort* first;
 } *matshortp, matshort;
 
-//typedef struct 
+typedef struct matrixindexshort
+{
+
+	int value;
+	matrixindexshort* next;
+	int column;
+	int row;
+	matrixindexshort* first;
+
+
+}*matindexp, matindex;
 
 char* createnumb(char* ch, matp* element, FILE* f1)
 {
@@ -40,10 +50,11 @@ char* createnumb(char* ch, matp* element, FILE* f1)
 	return ch;
 }
 
-void readmatrix(matp* matrix1[100], matp element1, matp element2,int* count)
+void readmatrix(matp* matrix1[100], matp element1, matp element2,int* count,char*line)
 {
+	*count = 0;
 	FILE* f1;                                   //open file to scan the matrix
-	fopen_s(&f1, "matrix.txt", "r");
+	fopen_s(&f1, line, "r");
 	char ch[2];                                 //symbol by symbol
 	fseek(f1, 0, SEEK_SET);
 	while (!feof(f1))
@@ -192,55 +203,275 @@ void cohshort(matp* matrix1[100], matp element2, int* count)
 
 }
 
+void fillshortindexmatrix(matindexp* matrix2[100], matp element2,int i, matindexp* elementind1, matindexp* elementind2,int countcolumn,int *countrow)
+{
+	(*elementind1) = new matindex;
+	(*elementind1)->value = element2->value;
+	(*elementind1)->column = countcolumn;
+	
+	int check=-1;
+	if ((*elementind2) != NULL)
+		check = (*elementind2)->row -1;
+	
+
+	if (check!=i)
+	{
+		check++;
+		(*countrow)++;
+		(*elementind1)->row = i+1;
+		(*elementind1)->first = (*elementind1);
+		(*matrix2[*countrow]) = (*elementind1);
+		(*elementind2) = (*elementind1);
+	}
+	else
+	{
+		(*elementind1)->first = (*elementind2)->first;
+		(*elementind2)->next = (*elementind1);
+		(*elementind1)->row = i+1;
+		(*elementind2) = (*elementind1);
+	}
+
+
+}
+
 void cohshortindex(matp* matrix1[100], int* count)
 {
+	matindexp* matrix2[100];                                 //CREATE A NEW MASSIVE
+
+	matindexp elementind1 ;
+	matindexp elementind2;
+	
 	matp element1 = new mat;
 	matp element2 = new mat;
 
+	int countcolumn = 0;
+	int countrow = -1;
+
+	for (int i = 0; i < 100; i++)
+	{
+		matrix2[i] = new matindexp;
+		(*matrix2[i]) = NULL;
+	}
+
 	for (int i = 0; i <= *count; i++)
 	{
+		elementind1 = NULL;
+		elementind2 = NULL;
+
 		element2 = (*matrix1[i]);
 		element1 = element2;
+
 		while (element1!=NULL)
 		{
+			countcolumn++;
 			element2 = element1;
-			/*if (element2 == NULL)
-				break;*/
-			if (element2->value == 0)
-			{
+			if (element2->value != 0)
+				fillshortindexmatrix(matrix2, element2, i, &elementind1,&elementind2, countcolumn,&countrow);
+	
+			if (element2->next != NULL)
 				element1 = element2->next;
-
-				if (element1 != NULL)
-				element1->prev = element2->prev;
-
-				if (element2->prev != NULL)
-					(element2->prev)->next = element1;
-				                                            //what if the first element value is null? check it
-				else
-					if (element1 != NULL)
-						(*matrix1[i]) = element1;
-					/*else
-					{
-						*count--;
-						delete element2;
-					}*/
-				delete element2;
-
-			}
 			else
-				element1 = element2->next;
-			if (element1 == NULL)
-				break;
+				if (elementind1 != NULL)
+				{
+					countcolumn = 0;
+					elementind1->next = NULL;                //clear columncount
+					countcolumn = 0;
+					break;
+				}
+				else
+				{
+					countcolumn = 0;
+					break;
+				}
+
+
+			
 			
 		}
 
 
 	}
+
 	cout << "---------------------" << endl;
+	for (int i = 0; i <= countrow; i++)
+	{
+		elementind1 = (*matrix2[i]);
+		while (*matrix2[countrow] )
+		{
+			cout <<"Row:"<< elementind1 ->row<< "Column:"<< elementind1 ->column<<" "<<elementind1->value << " ";                      //checkfunc change to matrix2
+			if (elementind1->next == NULL)
+				break;
+			else
+				elementind1 = elementind1->next;
+
+
+		}
+		cout << endl;
+
+	}
+	
+
+}
+
+void additionofmatrixes(matp* matrix1[100], int* count, matp element2, matp element1)
+{
+	matp* matrix2[100];
+	for (int i = 0; i < 100; i++)
+	{
+		matrix2[i] = new matp;
+		(*matrix2[i]) = NULL;
+	}
+	char line[100] = "matrix2.txt";
+	readmatrix(matrix2, element1, element2, count, line);
+
+	system("cls");                                              
+	
+
 	for (int i = 0; i <= *count; i++)
 	{
 		element1 = (*matrix1[i]);
-		while (*matrix1[*count] )
+		element2 = (*matrix2[i]);
+		while (element1 != NULL && element2 != NULL)
+		{
+			element1->value = element1->value + element2->value;
+			element1 = element1->next;
+			element2 = element2->next;
+		}
+	}
+
+	for (int i = 0; i <= *count; i++)
+	{
+		element1 = (*matrix1[i]);
+		while (*matrix1[*count])
+		{
+			cout << element1->value << " ";                      //checkfunc
+			if (element1->next == NULL)
+				break;
+			else
+				element1 = element1->next;
+
+
+		}
+		cout << endl;
+	}
+
+	for (int i = 0; i <= *count; i++)                 //to delete matrix2
+	{
+		element2 = (*matrix2[i]);
+		element1 = element2;
+		while (element1)
+		{
+			element2 = element1;
+			if (element2->next != NULL)
+				element1 = element2->next;
+			else
+			{
+				delete element2;
+				break;
+
+			}
+			delete element2;
+		}
+
+	}
+}
+
+void additionofvalues(matp* matrix1[100], matp* matrix2[100], matp* matrix3[100], int* count, matp element3, matp element2, matp element1)
+{
+	int val1 = 0, val2 = 0, sum = 0;
+	int move = 0, j = 0;
+	matp first = element1->first;
+	matp element4=NULL;
+	element3->prev = NULL;
+	element3->first = element3;
+	while (move<=*count)
+	{
+		element2 = (*matrix2[j]);
+		while (element1 != NULL)
+		{
+			element2 = (*matrix2[j]);
+			val1 = element1->value;
+			for (int i = 0; i < move; i++)
+			{
+				element2 = element2->next;
+			}
+			val2 = element2->value;
+			sum += val1 * val2;
+			element1 = element1->next;
+			j++;
+		}
+
+
+
+		element3->value = sum;
+		element3->prev = element4;
+		
+		if (element3->prev != NULL)
+		{
+			element3->first = (element3->prev)->first;
+			(element3->prev)->next = element3;
+		}
+		
+		
+		sum = 0;
+		j = 0;
+
+		move++;
+		element1 = first;
+		element4 = element3;
+		if (move <= *count)
+			element3 = new mat;
+		else
+			element3->next = NULL;
+	}
+	
+
+
+}
+
+void multiplicationofmatrixes(matp* matrix1[100], int* count, matp element2, matp element1)
+{
+	matp* matrix2[100];
+	for (int i = 0; i < 100; i++)
+	{
+		matrix2[i] = new matp;
+		(*matrix2[i]) = NULL;
+	}
+	matp* matrix3[100];
+	/*for (int i = 0; i < 100; i++)
+	{
+		matrix3[i] = new matp;
+		(*matrix3[i]) = NULL;
+	}*/
+	char line[100] = "matrix2.txt";
+	readmatrix(matrix2, element1, element2, count, line);
+
+	int sum=0;
+	int val1 = 0;
+	int val2 = 0;
+	int move = 0;
+	int j = 0;
+
+
+	for (int i = 0; i <= *count; i++)
+	{
+		matrix3[i] = new matp;
+		matp element3=new mat;
+		
+		element1 = (*matrix1[i]);
+
+		additionofvalues( matrix1, matrix2,  matrix3,  count, element3, element2, element1);
+		
+		(*matrix3[i]) = element3;
+
+		
+	}
+	cout << "---------" << endl;
+
+	for (int i = 0; i <= *count; i++)
+	{
+		element1 = (*matrix3[i]);
+		while (*matrix1[*count])
 		{
 			cout << element1->value << " ";                      //checkfunc
 			if (element1->next == NULL)
@@ -253,15 +484,56 @@ void cohshortindex(matp* matrix1[100], int* count)
 		cout << endl;
 
 	}
-	/*delete element1;
-	delete element2;*/
+
+	for (int i = 0; i <= *count; i++)                 //to delete matrix1
+	{
+		element2 = (*matrix1[i]);
+		element1 = element2;
+		while (element1)
+		{
+			element2 = element1;
+			if (element2->next != NULL)
+				element1 = element2->next;
+			else
+			{
+				delete element2;
+				break;
+
+			}
+			delete element2;
+		}
+
+	}
+	
+	
+	for (int i = 0; i <= *count; i++)                 //to delete matrix2
+	{
+		element2 = (*matrix2[i]);
+		element1 = element2;
+		while (element1)
+		{
+			element2 = element1;
+			if (element2->next != NULL)
+				element1 = element2->next;
+			else
+			{
+				delete element2;
+				break;
+
+			}
+			delete element2;
+		}
+
+	}
+
 
 }
 
 int main()
 {
 	
-
+	char line[100] = "matrix.txt";             //name of file to open
+	
 	matp* matrix1[100];
 	for (int i = 0; i < 100; i++)
 	{
@@ -275,7 +547,8 @@ int main()
 	
 	char choice='1';
 	while (choice == '1') {
-		cout << "choose 1 ,2 ,3" << endl;
+		system("cls");
+		cout << "choose 1.Read matrix from file\n2.Short linked list\n3.Short linked index list\n4.Addition of matrixes\n5.Multiplication of matrixes" << endl;
 		choice = _getch();
 		if (cin.fail())
 		{
@@ -285,13 +558,19 @@ int main()
 		switch (choice)
 		{
 		case ('1'):
-			readmatrix(matrix1, element1, element2, &count);
+			readmatrix(matrix1, element1, element2, &count,line);
 			break;
 		case('2'):
 			cohshort(matrix1, element2, &count);
 			break;
 		case('3'):
 			cohshortindex(matrix1, &count);
+			break;
+		case('4'):
+			additionofmatrixes(matrix1, &count, element2, element1);
+			break;
+		case('5'):
+			multiplicationofmatrixes(matrix1, &count, element2, element1);
 			break;
 		}
 		cout << "continue? 1,2" << endl;
