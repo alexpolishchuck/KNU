@@ -1,0 +1,204 @@
+#include <iostream>
+#include <math.h>
+#include "conio.h"
+
+using std::cin;
+using std::cout;
+using std::endl;
+
+typedef struct mystack
+{
+	char sign='_';
+	char op[10]="\0";
+	
+	mystack* prev = NULL;
+}*stp,st;
+bool checkprecedence(char line[100],int i, stp stackelement)          //change i
+{
+	int stackvalue = 0;
+	int linevalue = 0;
+
+	switch (stackelement->sign)
+	{
+	case ('-'):
+		stackvalue = 1;
+		break;
+	case ('+'):
+		stackvalue = 1;
+		break;
+	case ('*'):
+		stackvalue = 2;
+		break;
+	case ('/'):
+		stackvalue = 2;
+		break;
+	case ('^'):
+		stackvalue = 3;
+		break;
+	}
+
+	switch (line[i+2])
+	{
+	case ('-'):
+		linevalue = 1;
+		break;
+	case ('+'):
+		linevalue = 1;
+		break;
+	case ('*'):
+		linevalue = 2;
+		break;
+	case ('/'):
+		linevalue = 2;
+		break;
+	case ('^'):
+		linevalue = 3;
+		break;
+	}
+	if (stackvalue - linevalue < 0)
+		return false;
+	else return true;
+}                           //change i                                    
+
+void toppop(stp* stackelement, char rpnline[100],int* j)            //maybe delete *
+{
+stp* switchtoprev=new stp;  
+*switchtoprev = (*stackelement)->prev;
+
+rpnline[*j] = (*stackelement)->sign;
+(*j)++;
+rpnline[*j] = 32;
+(*j)++;
+delete (*stackelement);
+*stackelement = new st;
+
+if ((*switchtoprev) == NULL)
+*stackelement = NULL;
+else
+
+	*stackelement = (*switchtoprev);
+
+
+
+
+}
+
+void popornot(stp* stackelement, char rpnline[100], int* j,stp* previous,char line[100],int *i)
+{
+	if ((*stackelement) != NULL && checkprecedence(line, *i, *stackelement))
+	{
+		toppop(stackelement, rpnline, j);
+		if ((*stackelement) == NULL || (*stackelement)->sign == '_')
+		{
+			(*stackelement) = NULL;
+			*previous = NULL;                                                 //maybe delete
+		}
+		else
+			(*previous) = (*stackelement);                       //maybe delete changing previous after changing element
+		popornot(stackelement, rpnline, j, previous, line, i);
+	}
+
+
+}
+
+void createrpn(char line[100])
+{
+	stp previous = new st;
+	previous = NULL;
+	stp stackelement = new st;
+	
+	stackelement = NULL;
+	char rpnline[100];
+	char ch='0';
+	//char check;                                                //to check binar minus
+	int i = 0;
+	int j = 0;
+	while (ch != '\0')
+	{
+		ch = line[i];
+		if (ch == '\0')
+		{
+			rpnline[j] = ch;
+			break;
+		}
+
+		if (ch <= 57 && ch >= 48)
+		{
+			rpnline[j] = ch;
+			j++;
+			rpnline[j] = 32;
+			j++;
+			
+			if(line[i+1]!='\0')
+			popornot(&stackelement, rpnline, & j, &previous, line, & i);           // maybe delete &
+			if (stackelement!= NULL && stackelement->sign == '_')
+			{
+				stackelement = NULL;
+				previous = NULL;                                                 //maybe delete
+			}
+			
+		}
+
+		if ( ch == '+' || ch == '^' || ch == '*' || ch == '/')            //check minus
+		{
+			if (stackelement == NULL)
+				delete stackelement;
+			stackelement = new st;
+			stackelement->sign = ch;
+			stackelement->prev = previous;
+			previous = stackelement;
+		}
+
+		if (ch == '-' && line[i + 1] == 32)
+		{
+			if (stackelement == NULL)                                  //maybe delete
+				delete stackelement;
+			stackelement = new st;
+			stackelement->sign = ch;
+			stackelement->prev = previous;
+			previous = stackelement;
+		}
+		else if(ch == '-' && line[i + 1] != 32)
+		{
+
+			rpnline[j] = ch;
+			j++;
+			rpnline[j] = line[i + 1];
+			j++;
+			i++;
+
+		}
+
+		i++;
+		
+	}
+	while (stackelement != NULL)
+	{
+		if (stackelement == NULL)
+			break;
+		rpnline[j] = stackelement->sign;
+		j++;
+		rpnline[j] = 32;
+		j++;
+		stackelement = stackelement->prev;
+		//check 1 + 2 * 4 * 8 * 9 + 5 * 6 + 7
+
+	}
+	j--;
+	rpnline[j] = '\0';
+	cout << rpnline << endl;
+}
+
+int main()
+{
+	char line[100];
+	cin.getline(line, 100);
+	if (cin.fail())
+	{
+		cin.ignore(cin.rdbuf()->in_avail());
+		cin.clear();
+	}
+	createrpn(line);
+	
+	return 0;
+}
