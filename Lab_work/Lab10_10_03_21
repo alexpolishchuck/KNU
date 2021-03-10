@@ -13,6 +13,7 @@ typedef struct mystack
 	
 	mystack* prev = NULL;
 }*stp,st;
+
 bool checkprecedence(char line[100],int i, stp stackelement)          //change i
 {
 	int stackvalue = 0;
@@ -85,6 +86,7 @@ else
 
 void popornot(stp* stackelement, char rpnline[100], int* j,stp* previous,char line[100],int *i)
 {
+	
 	if ((*stackelement) != NULL && checkprecedence(line, *i, *stackelement))
 	{
 		toppop(stackelement, rpnline, j);
@@ -96,6 +98,37 @@ void popornot(stp* stackelement, char rpnline[100], int* j,stp* previous,char li
 		else
 			(*previous) = (*stackelement);                       //maybe delete changing previous after changing element
 		popornot(stackelement, rpnline, j, previous, line, i);
+	}
+
+
+}
+
+void unloadinbrackets(stp* stackelement, char rpnline[100], int* j)
+{
+	stp* switchtoprev = new stp;
+	
+	while ((*stackelement)->sign!='(')
+	{
+		
+		if ((*stackelement) == NULL || (*stackelement)->sign=='(')
+			break;
+		*switchtoprev = (*stackelement)->prev;
+		rpnline[*j] = (*stackelement)->sign;
+		(*j)++;
+		rpnline[*j] = 32;
+		(*j)++;
+		delete (*stackelement);
+		(*stackelement) = new st;
+		(*stackelement) = (*switchtoprev);
+		//check 1 + 2 * 4 * 8 * 9 + 5 * 6 + 7
+
+	}
+	if ((*stackelement)->sign == '(')
+	{
+		*switchtoprev = (*stackelement)->prev;
+		delete (*stackelement);
+		(*stackelement) = new st;
+		(*stackelement) = (*switchtoprev);
 	}
 
 
@@ -129,18 +162,31 @@ void createrpn(char line[100])
 			rpnline[j] = 32;
 			j++;
 			
-			if(line[i+1]!='\0')
-			popornot(&stackelement, rpnline, & j, &previous, line, & i);           // maybe delete &
+			if (line[i + 1] != '\0' && line[i + 2] != ')')
+				popornot(&stackelement, rpnline, &j, &previous, line, &i);           
+
+			else if (line[i + 2] == ')')                                            //operation for closed brackets;
+			{                                                                       //mayve put in loop while (line[i + 2] == ')')
+				while (line[i + 2] == ')')
+				{
+					unloadinbrackets(&stackelement, rpnline, &j);
+					i = i + 2;
+				}
+				if (line[i + 1] != '\0' && line[i + 2] != ')')
+				popornot(&stackelement, rpnline, &j, &previous, line, &i);
+			}                                                                 
+
 			if (stackelement!= NULL && stackelement->sign == '_')
 			{
 				stackelement = NULL;
-				previous = NULL;                                                 //maybe delete
+				previous = NULL;                                                 
 			}
 			
 		}
 
-		if ( ch == '+' || ch == '^' || ch == '*' || ch == '/')            //check minus
-		{
+		if ( ch == '+' || ch == '^' || ch == '*' || ch == '/' || ch=='(')            //check minus
+		{       
+			previous = stackelement;                                           //maybe delete this previous
 			if (stackelement == NULL)
 				delete stackelement;
 			stackelement = new st;
@@ -158,6 +204,7 @@ void createrpn(char line[100])
 			stackelement->prev = previous;
 			previous = stackelement;
 		}
+
 		else if(ch == '-' && line[i + 1] != 32)
 		{
 
@@ -169,6 +216,7 @@ void createrpn(char line[100])
 
 		}
 
+	   
 		i++;
 		
 	}
