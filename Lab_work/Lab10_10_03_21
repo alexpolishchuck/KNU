@@ -14,6 +14,24 @@ typedef struct mystack
 	mystack* prev = NULL;
 }*stp,st;
 
+typedef struct treenode
+{
+	char value='0';
+	char value2[10];
+	treenode* right;
+	treenode* left;
+
+
+
+} *treep ,tree;
+
+typedef struct mytreestack
+{
+	mytreestack* prev;
+	treep node;
+
+}*trstp,trst;
+
 bool checkprecedence(char line[100],int i, stp stackelement)          //change i
 {
 	int stackvalue = 0;
@@ -134,6 +152,76 @@ void unloadinbrackets(stp* stackelement, char rpnline[100], int* j)
 
 }
 
+bool isinline(char variables[100], char ch,int j)
+{
+	
+	for (int i = 0; i<j; i++)
+	{
+		if (ch == variables[i])
+			return true;
+
+
+	}
+
+	return false;
+}
+
+void changevariables(char line[100])
+{
+	char ch='0',ch1='0';
+	int j = 0;
+	char variables[100];
+	
+	for (int i = 0; ch != '\0'; i++)
+	{
+		ch = line[i];
+		if (ch == '\0')
+			break;
+		if (ch == 'l' && line[i + 1] == 'o' && line[i + 2] == 'g')
+		{
+			i = i + 3;
+			ch = line[i];
+		}
+		if (ch != 32 && (ch > 57 || ch < 48) && ch != 'e' && ch != ',' && ch != '+' && ch != '^' && ch != '*' && ch != '/' && ch != '(' && ch != ')' && ch != '-')
+		{
+			if (!isinline(variables, ch, j))
+			{
+				variables[j] = ch;
+				j++;
+			}
+
+
+		}
+
+
+	}
+	variables[j] = '\0';
+	
+	for ( j = 0; variables[j] != '\0'; j++)
+	{
+			cout << "Enter the value of the " << variables[j] << " variable: " << endl;
+			ch = _getch();
+			if (cin.fail())
+			{
+				cin.ignore(cin.rdbuf()->in_avail());
+				cin.clear();
+			}
+			
+			for (int i = 0; line[i] != '\0'; i++)
+			{
+				
+				if (line[i] == variables[j])
+					line[i] = ch;
+
+			}
+	}
+	
+	cout << "---------------------" << endl;
+	cout << line << endl;
+}
+
+treep createtree(char rpnline[100]);
+
 void createrpn(char line[100])
 {
 	stp previous = new st;
@@ -155,7 +243,20 @@ void createrpn(char line[100])
 			break;
 		}
 
-		if (ch <= 57 && ch >= 48 || ch=='x' || ch=='y' || ch == 'e')
+		if (ch == 'l' && line[i + 1] == 'o' && line[i + 2] == 'g')      //read log(x,y)
+		{
+			while (ch != 32 && ch != '\0')
+			{
+				rpnline[j] = ch;
+				j++;
+				i++;
+				ch = line[i];
+			}
+			rpnline[j] = 32;
+			j++;
+		}
+
+		if (ch <= 57 && ch >= 48 || ch=='e')
 		{
 			rpnline[j] = ch;
 			j++;
@@ -184,18 +285,6 @@ void createrpn(char line[100])
 			
 		}
 
-		if (ch == 'l')
-		{
-			while (ch != 32 && ch!='\0')
-			{
-				rpnline[j] = ch;
-				j++;
-				i++;
-				ch = line[i];
-			}
-			rpnline[j] = 32;
-			j++;
-		}
 
 		if ( ch == '+' || ch == '^' || ch == '*' || ch == '/' || ch=='(')            //check minus
 		{       
@@ -248,6 +337,135 @@ void createrpn(char line[100])
 	j--;
 	rpnline[j] = '\0';
 	cout << rpnline << endl;
+
+	treep treenode;
+	treenode = createtree(rpnline);
+}
+
+void pushtreestack(trstp* treestackelement, trstp* previous, treep* treenode)
+{
+	(*previous) = (*treestackelement);
+	(*treestackelement) = new trst;
+	
+	(*treestackelement)->node = (*treenode);
+	(*treestackelement)->prev = (*previous);
+
+}
+
+treep createtree(char rpnline[100])
+{
+	trstp treestackelement = new trst;
+	treestackelement = NULL;
+	trstp previous = new trst;
+	previous = NULL;
+	treep treenode;
+
+	treep pop1;
+	treep pop2;
+
+	char ch;
+
+	for (int i = 0; rpnline[i] != '\0'; i++)
+	{
+		ch = rpnline[i]; 
+
+		if (ch == 'l' && rpnline[i + 1] == 'o' && rpnline[i + 2] == 'g')      //read log(x,y)
+		{
+			treenode = new tree;
+			int j = 0;
+			while (ch != 32 && ch != '\0')
+			{
+				treenode->value2[j] = ch;
+				i++;
+				j++;
+				ch = rpnline[i];
+			}
+			treenode->value2[j] = '\0';
+			treenode->left = NULL;
+			treenode->right = NULL;
+			pushtreestack(&treestackelement, &previous, &treenode);
+		}
+
+		if (ch <= 57 && ch >= 48 || ch == 'e')
+		{
+			treenode = new tree;
+			treenode->value = ch;
+			treenode->left = NULL;
+			treenode->right = NULL;
+
+			pushtreestack(&treestackelement, &previous, &treenode);
+		}
+
+
+		if (ch == '+' || ch == '^' || ch == '*' || ch == '/' || ch == '(')            //check minus
+		{
+			pop1 = treestackelement->node;
+			pop2 = (treestackelement->prev)->node;
+
+			treenode = new tree;
+
+			treenode->left = pop1;
+			treenode->right = pop2;
+			treenode->value = ch;
+
+			int count = 2;
+			while (count)
+			{
+				previous = treestackelement->prev;
+				delete treestackelement;
+				treestackelement = new trst;
+				treestackelement = previous;
+				count--;
+			}
+			pushtreestack(&treestackelement, &previous, &treenode);
+		}
+
+		if (ch == '-' && rpnline[i + 1] == 32)
+		{
+			pop1 = treestackelement->node;
+			pop2 = (treestackelement->prev)->node;
+
+			treenode = new tree;
+
+			treenode->left = pop1;
+			treenode->right = pop2;
+			treenode->value = ch;
+
+			int count = 2;
+			while (count)
+			{
+				previous = treestackelement->prev;
+				delete treestackelement;
+				treestackelement = new trst;
+				treestackelement = previous;
+				count--;
+			}
+			pushtreestack(&treestackelement, &previous, &treenode);
+
+		}
+
+		else if (ch == '-' && rpnline[i + 1] != 32)
+		{
+			treenode = new tree;
+			int j = 0;
+			while (ch != 32 && ch != '\0')
+			{
+				treenode->value2[j] = ch;
+				i++;
+				j++;
+				ch = rpnline[i];
+			}
+			treenode->value2[j] = '\0';
+			treenode->left = NULL;
+			treenode->right = NULL;
+			pushtreestack(&treestackelement, &previous, &treenode);
+			
+
+		}
+
+	}
+	treenode = treestackelement->node;
+	return treenode;
 }
 
 int main()
@@ -259,6 +477,7 @@ int main()
 		cin.ignore(cin.rdbuf()->in_avail());
 		cin.clear();
 	}
+	changevariables(line);
 	createrpn(line);
 	
 	return 0;
