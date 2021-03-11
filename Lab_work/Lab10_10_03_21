@@ -155,7 +155,7 @@ void createrpn(char line[100])
 			break;
 		}
 
-		if (ch <= 57 && ch >= 48)
+		if (ch <= 57 && ch >= 48 || ch=='x' || ch=='y' || ch == 'e')
 		{
 			rpnline[j] = ch;
 			j++;
@@ -182,6 +182,19 @@ void createrpn(char line[100])
 				previous = NULL;                                                 
 			}
 			
+		}
+
+		if (ch == 'l')
+		{
+			while (ch != 32 && ch!='\0')
+			{
+				rpnline[j] = ch;
+				j++;
+				i++;
+				ch = line[i];
+			}
+			rpnline[j] = 32;
+			j++;
 		}
 
 		if ( ch == '+' || ch == '^' || ch == '*' || ch == '/' || ch=='(')            //check minus
