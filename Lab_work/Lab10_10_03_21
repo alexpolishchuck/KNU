@@ -20,7 +20,7 @@ typedef struct treenode
 	char value2[10];
 	treenode* right;
 	treenode* left;
-
+	float calculate = 0;
 
 
 } *treep ,tree;
@@ -222,6 +222,136 @@ void changevariables(char line[100])
 
 treep createtree(char rpnline[100]);
 
+void showtree(treep treenode)
+{
+	if ((treenode->left)->value >= 48 && (treenode->left)->value <= 57 || (treenode->left)->value == 'e')
+	{
+		if ((treenode->left)->value == 48)
+		{
+
+			for (int i = 0; (treenode->left)->value2[i] != '\0';i++)
+				cout << (treenode->left)->value2[i];
+			cout << " ";
+		}
+		else
+		{
+			cout<<(treenode->left)->value;
+			cout << " ";
+		}
+		cout << treenode->value;
+		cout << " ";
+
+	}
+	else
+	{
+		(showtree(treenode->left));
+		cout << treenode->value;
+		cout << " ";
+	}
+	if ((treenode->right)->value >= 48 && (treenode->right)->value <= 57 || (treenode->right)->value == 'e')
+	{
+		if ((treenode->right)->value == 48)
+		{
+
+			for (int i = 0; (treenode->right)->value2[i] != '\0';i++)
+				cout << (treenode->right)->value2[i];
+
+			cout << " ";
+		}
+		else
+		{
+			cout << (treenode->right)->value;
+			cout << " ";
+		}
+
+
+	}
+	else (showtree(treenode->right));
+
+}
+
+void transformintofloat(treep* treenode)
+{
+	if ((*treenode)->value > 48 && (*treenode)->value <= 57) 
+		(*treenode)->calculate = (*treenode)->value - '0';
+	
+	if ((*treenode)->value == 'e')
+		(*treenode)->calculate = 2.7;
+
+	if ((*treenode)->value == '0')
+	{
+		int number1 = 0, number2 = 0;
+		if ((*treenode)->value2[0] == 'l')                                    //log
+		{
+
+			for (int i = 0; (*treenode)->value2[i] != '\0'; i++)
+				if ((*treenode)->value2[i] > 48 && (*treenode)->value2[i] <= 57 && number1 == 0)
+					number1 = (*treenode)->value2[i] - '0';
+				else if ((*treenode)->value2[i] > 48 && (*treenode)->value2[i] <= 57 && number2 == 0)
+					number2 = (*treenode)->value2[i] - '0';
+			(*treenode)->calculate = log(number2) / log(number1);
+		}
+		if ((*treenode)->value2[0] == '-')
+		{
+			if((*treenode)->value2[1] == 'e')
+				(*treenode)->calculate = 0 - 2.7;
+			if ((*treenode)->value2[1] > 48 && (*treenode)->value2[1] <= 57)
+				(*treenode)->calculate = 0 - ((*treenode)->value2[1] - '0');                //   -log(x,y)???
+
+		}
+
+	}
+}
+
+void calculatevalue(treep* treenode, treep left, treep right)
+{
+	float Lnumber = 0;
+	float Rnumber = 0;
+	if (left->value >= 48 && left->value <= 57 || left->value == 'e')
+		transformintofloat(&left);
+		Lnumber = left->calculate;
+
+		if (right->value >= 48 && right->value <= 57 || right->value == 'e')
+			transformintofloat(&right);
+		Rnumber = right->calculate;
+
+		switch ((*treenode)->value)
+		{
+		case '+':
+			(*treenode)->calculate = Lnumber + Rnumber;
+			break;
+		case '-':
+			(*treenode)->calculate = Lnumber - Rnumber;
+			break;
+		case '*':
+			(*treenode)->calculate = Lnumber * Rnumber;
+			break;
+		case '/':
+			(*treenode)->calculate = Lnumber / Rnumber;
+			break;
+		case '^':
+			(*treenode)->calculate = pow(Lnumber,Rnumber);
+			break;
+		}
+
+
+}
+
+void calculatetree(treep treenode)
+{
+	if ((treenode->left)->value < 48 || (treenode->left)->value > 57 && (treenode->left)->value != 'e')
+		calculatetree(treenode->left);
+		
+	
+	if ((treenode->right)->value < 48 || (treenode->right)->value > 57 && (treenode->right)->value != 'e')
+		calculatetree(treenode->right);
+
+	calculatevalue(&treenode, treenode->left, treenode->right);
+
+	/*cout << endl;
+	cout << treenode->calculate ;*/
+}
+
 void createrpn(char line[100])
 {
 	stp previous = new st;
@@ -243,31 +373,44 @@ void createrpn(char line[100])
 			break;
 		}
 
-		if (ch == 'l' && line[i + 1] == 'o' && line[i + 2] == 'g')      //read log(x,y)
+		
+		if (ch <= 57 && ch >= 48 || ch=='e' || (ch == 'l' && line[i + 1] == 'o' && line[i + 2] == 'g') || (ch == '-' && line[i + 1] != 32))
 		{
-			while (ch != 32 && ch != '\0')
+			if (ch == '-' && line[i + 1] != 32)  //binar minus
 			{
+
 				rpnline[j] = ch;
 				j++;
 				i++;
 				ch = line[i];
-			}
-			rpnline[j] = 32;
-			j++;
-		}
 
-		if (ch <= 57 && ch >= 48 || ch=='e')
-		{
-			rpnline[j] = ch;
-			j++;
-			rpnline[j] = 32;
-			j++;
-			
+			}
+			if (ch == 'l' && line[i + 1] == 'o' && line[i + 2] == 'g')      //read log(x,y)
+			{
+				while (ch != 32 && ch != '\0')
+				{
+					rpnline[j] = ch;
+					j++;
+					i++;
+					ch = line[i];
+				}
+				rpnline[j] = 32;
+				j++;
+				i--;
+				ch = line[i];
+			}
+			else 
+			{
+				rpnline[j] = ch;
+				j++;
+				rpnline[j] = 32;
+				j++;
+			}
 			if (line[i + 1] != '\0' && line[i + 2] != ')')
 				popornot(&stackelement, rpnline, &j, &previous, line, &i);           
 
 			else if (line[i + 2] == ')')                                            //operation for closed brackets;
-			{                                                                       //mayve put in loop while (line[i + 2] == ')')
+			{                                                                       
 				while (line[i + 2] == ')')
 				{
 					unloadinbrackets(&stackelement, rpnline, &j);
@@ -288,7 +431,7 @@ void createrpn(char line[100])
 
 		if ( ch == '+' || ch == '^' || ch == '*' || ch == '/' || ch=='(')            //check minus
 		{       
-			previous = stackelement;                                           //maybe delete this previous
+			previous = stackelement;                                           
 			if (stackelement == NULL)
 				delete stackelement;
 			stackelement = new st;
@@ -299,7 +442,7 @@ void createrpn(char line[100])
 
 		if (ch == '-' && line[i + 1] == 32)
 		{
-			if (stackelement == NULL)                                  //maybe delete
+			if (stackelement == NULL)                                  
 				delete stackelement;
 			stackelement = new st;
 			stackelement->sign = ch;
@@ -307,17 +450,7 @@ void createrpn(char line[100])
 			previous = stackelement;
 		}
 
-		else if(ch == '-' && line[i + 1] != 32)
-		{
-
-			rpnline[j] = ch;
-			j++;
-			rpnline[j] = line[i + 1];
-			j++;
-			i++;
-
-		}
-
+		
 	   
 		i++;
 		
@@ -331,7 +464,7 @@ void createrpn(char line[100])
 		rpnline[j] = 32;
 		j++;
 		stackelement = stackelement->prev;
-		//check 1 + 2 * 4 * 8 * 9 + 5 * 6 + 7
+		
 
 	}
 	j--;
@@ -340,6 +473,9 @@ void createrpn(char line[100])
 
 	treep treenode;
 	treenode = createtree(rpnline);
+	showtree(treenode);
+	calculatetree(treenode);
+	cout <<endl << treenode->calculate << endl;
 }
 
 void pushtreestack(trstp* treestackelement, trstp* previous, treep* treenode)
@@ -404,8 +540,8 @@ treep createtree(char rpnline[100])
 
 			treenode = new tree;
 
-			treenode->left = pop1;
-			treenode->right = pop2;
+			treenode->left = pop2;
+			treenode->right = pop1;
 			treenode->value = ch;
 
 			int count = 2;
@@ -420,15 +556,15 @@ treep createtree(char rpnline[100])
 			pushtreestack(&treestackelement, &previous, &treenode);
 		}
 
-		if (ch == '-' && rpnline[i + 1] == 32)
+		if (ch == '-' && (rpnline[i + 1] == 32 || rpnline[i + 1] =='\0' ))
 		{
 			pop1 = treestackelement->node;
 			pop2 = (treestackelement->prev)->node;
 
 			treenode = new tree;
 
-			treenode->left = pop1;
-			treenode->right = pop2;
+			treenode->left = pop2;
+			treenode->right = pop1;
 			treenode->value = ch;
 
 			int count = 2;
@@ -482,3 +618,5 @@ int main()
 	
 	return 0;
 }
+//1 + 2 ^ log(8,9) * 4 - 5 ^ ( -1 - -2 )
+//1 + log(2,2) ^ ( 1 * e ^ log(2,2) + 3 )
