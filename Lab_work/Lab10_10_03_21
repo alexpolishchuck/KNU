@@ -293,6 +293,16 @@ void transformintofloat(treep* treenode)
 		}
 		if ((*treenode)->value2[0] == '-')
 		{
+			if ((*treenode)->value2[1] == 'l')                                    // -log()
+			{
+
+				for (int i = 0; (*treenode)->value2[i] != '\0'; i++)
+					if ((*treenode)->value2[i] > 48 && (*treenode)->value2[i] <= 57 && number1 == 0)
+						number1 = (*treenode)->value2[i] - '0';
+					else if ((*treenode)->value2[i] > 48 && (*treenode)->value2[i] <= 57 && number2 == 0)
+						number2 = (*treenode)->value2[i] - '0';
+				(*treenode)->calculate = 0 - log(number2) / log(number1);
+			}
 			if((*treenode)->value2[1] == 'e')
 				(*treenode)->calculate = 0 - 2.7;
 			if ((*treenode)->value2[1] > 48 && (*treenode)->value2[1] <= 57)
@@ -618,5 +628,29 @@ int main()
 	
 	return 0;
 }
-//1 + 2 ^ log(8,9) * 4 - 5 ^ ( -1 - -2 )
-//1 + log(2,2) ^ ( 1 * e ^ log(2,2) + 3 )
+//1 + 2 ^ log(2,8) * 4 - 5 ^ ( -1 - -2 )
+//1 + -e + log(2,8) ^ ( 1 * e ^ log(2,8) + 3 )
+/*digraph G {
+
+node001[label = "-"]
+node002[label = "+"]
+node003[label = "*"]
+node004[label = "^"]
+node005[label = "^"]
+node006[label = "-"]
+
+node001->node002;
+node002 -> "1";
+node002->node003;
+node003 -> "4"
+node003->node004
+node004 -> "2"
+node004 ->  "log(2,8)"
+node001->node005;
+node005 -> "5";
+node005->node006;
+node006 -> "-1";
+node006 -> "-2"
+
+}
+*/
