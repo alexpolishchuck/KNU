@@ -1,1 +1,118 @@
+void createrpn(char line[100])
+{
+	stp previous = new st;
+	previous = NULL;
+	stp stackelement = new st;
+	
+	stackelement = NULL;
+	char rpnline[100];
+	char ch='0';
+	//char check;                                                //to check binar minus
+	int i = 0;
+	int j = 0;
+	while (ch != '\0')
+	{
+		ch = line[i];
+		if (ch == '\0')
+		{
+			rpnline[j] = ch;
+			break;
+		}
 
+		
+		if (ch <= 57 && ch >= 48 || ch=='e' || (ch == 'l' && line[i + 1] == 'o' && line[i + 2] == 'g') || (ch == '-' && line[i + 1] != 32))
+		{
+			if (ch == '-' && line[i + 1] != 32)  //binar minus
+			{
+
+				rpnline[j] = ch;
+				j++;
+				i++;
+				ch = line[i];
+
+			}
+			if (ch == 'l' && line[i + 1] == 'o' && line[i + 2] == 'g')      //read log(x,y)
+			{
+				while (ch != 32 && ch != '\0')
+				{
+					rpnline[j] = ch;
+					j++;
+					i++;
+					ch = line[i];
+				}
+				rpnline[j] = 32;
+				j++;
+				i--;
+				ch = line[i];
+			}
+			else 
+			{
+				rpnline[j] = ch;
+				j++;
+				rpnline[j] = 32;
+				j++;
+			}
+			if (line[i + 1] != '\0' && line[i + 2] != ')')
+				popornot(&stackelement, rpnline, &j, &previous, line, &i);           
+
+			else if (line[i + 2] == ')')                                            //operation for closed brackets;
+			{                                                                       
+				while (line[i + 2] == ')')
+				{
+					unloadinbrackets(&stackelement, rpnline, &j);
+					i = i + 2;
+				}
+				if (line[i + 1] != '\0' && line[i + 2] != ')')
+				popornot(&stackelement, rpnline, &j, &previous, line, &i);
+			}                                                                 
+
+			if (stackelement!= NULL && stackelement->sign == '_')
+			{
+				stackelement = NULL;
+				previous = NULL;                                                 
+			}
+			
+		}
+
+
+		if ( ch == '+' || ch == '^' || ch == '*' || ch == '/' || ch=='(')            //check minus
+		{       
+			previous = stackelement;                                           
+			if (stackelement == NULL)
+				delete stackelement;
+			stackelement = new st;
+			stackelement->sign = ch;
+			stackelement->prev = previous;
+			previous = stackelement;
+		}
+
+		if (ch == '-' && line[i + 1] == 32)
+		{
+			if (stackelement == NULL)                                  
+				delete stackelement;
+			stackelement = new st;
+			stackelement->sign = ch;
+			stackelement->prev = previous;
+			previous = stackelement;
+		}
+
+		
+	   
+		i++;
+		
+	}
+	while (stackelement != NULL)
+	{
+		if (stackelement == NULL)
+			break;
+		rpnline[j] = stackelement->sign;
+		j++;
+		rpnline[j] = 32;
+		j++;
+		stackelement = stackelement->prev;
+		
+
+	}
+	j--;
+	rpnline[j] = '\0';
+	cout << rpnline << endl;
