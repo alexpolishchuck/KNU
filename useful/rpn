@@ -1,3 +1,77 @@
+void toppop(stp* stackelement, char rpnline[100],int* j)            //maybe delete *
+{
+stp* switchtoprev=new stp;  
+*switchtoprev = (*stackelement)->prev;
+
+rpnline[*j] = (*stackelement)->sign;
+(*j)++;
+rpnline[*j] = 32;
+(*j)++;
+delete (*stackelement);
+*stackelement = new st;
+
+if ((*switchtoprev) == NULL)
+*stackelement = NULL;
+else
+
+	*stackelement = (*switchtoprev);
+
+
+
+
+}
+
+void popornot(stp* stackelement, char rpnline[100], int* j,stp* previous,char line[100],int *i)
+{
+	
+	if ((*stackelement) != NULL && checkprecedence(line, *i, *stackelement))
+	{
+		toppop(stackelement, rpnline, j);
+		if ((*stackelement) == NULL || (*stackelement)->sign == '_')
+		{
+			(*stackelement) = NULL;
+			*previous = NULL;                                                 //maybe delete
+		}
+		else
+			(*previous) = (*stackelement);                       //maybe delete changing previous after changing element
+		popornot(stackelement, rpnline, j, previous, line, i);
+	}
+
+
+}
+
+void unloadinbrackets(stp* stackelement, char rpnline[100], int* j)
+{
+	stp* switchtoprev = new stp;
+	
+	while ((*stackelement)->sign!='(')
+	{
+		
+		if ((*stackelement) == NULL || (*stackelement)->sign=='(')
+			break;
+		*switchtoprev = (*stackelement)->prev;
+		rpnline[*j] = (*stackelement)->sign;
+		(*j)++;
+		rpnline[*j] = 32;
+		(*j)++;
+		delete (*stackelement);
+		(*stackelement) = new st;
+		(*stackelement) = (*switchtoprev);
+		//check 1 + 2 * 4 * 8 * 9 + 5 * 6 + 7
+
+	}
+	if ((*stackelement)->sign == '(')
+	{
+		*switchtoprev = (*stackelement)->prev;
+		delete (*stackelement);
+		(*stackelement) = new st;
+		(*stackelement) = (*switchtoprev);
+	}
+
+
+}
+
+
 void createrpn(char line[100])
 {
 	stp previous = new st;
