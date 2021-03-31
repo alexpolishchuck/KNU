@@ -1,0 +1,293 @@
+#include <iostream>
+#include <math.h>
+#include "conio.h"
+
+using std::cin;
+using std::cout;
+using std::endl;
+
+
+
+
+typedef struct bintree
+{
+
+	char english[29];
+	char ukrainian[29];
+	bintree* right = NULL;
+	bintree* left = NULL;
+	int counter = 0;
+	bool exists = true;
+}* trnodep, trnode;
+
+bool checkline(char line[])
+{
+	for (int i = 0; line[i] != '\0'; i++)
+	{
+		if (line[i] < 97 || line[i]>122)
+		{
+			system("cls");
+			cout << "Sorry, but your word shouldn't contain any other signs apart from lowercase letters " << endl;
+			system("pause");
+			return false;
+		}
+
+
+	}
+	return true;
+
+
+}
+
+void createfirstdictionary (char line[], trnodep* oldfirst, trnodep* treenode)
+{
+	char line2[29];
+	int counter = 0;
+	cout << "Now enter a translation of the word you added" << endl;
+	cin.getline(line2, 29);
+	if (cin.fail())
+	{
+		cin.ignore(cin.rdbuf()->in_avail());
+		cin.clear();
+	}
+	if (checkline(line2) != false)
+	{
+		cout << "Now enter a counter value" << endl;
+		cin >> counter;
+		if ((*oldfirst) == NULL)
+		{
+			(*treenode) = new trnode;
+			strcpy_s((*treenode)->english, line);
+			strcpy_s((*treenode)->ukrainian, line2);
+			(*treenode)->counter = counter;
+			(*oldfirst) = (*treenode);
+		}
+		else
+		{
+			if ((*treenode)->left != NULL && (*treenode)->right != NULL)
+				(*treenode) = (*treenode)->left;
+
+			if ((*treenode)->right == NULL)
+			{
+				(*treenode)->right = new trnode;
+				strcpy_s(((*treenode)->right)->english, line);
+				strcpy_s(((*treenode)->right)->ukrainian, line2);
+				(*treenode)->right->counter = counter;
+			}
+
+			else
+				if ((*treenode)->left == NULL)
+				{
+					(*treenode)->left = new trnode;
+					strcpy_s(((*treenode)->left)->english, line);
+					strcpy_s(((*treenode)->left)->ukrainian, line2);
+					(*treenode)->left->counter = counter;
+				}
+
+		}
+
+	}
+} //to create the first dictionary
+
+bool doeswordexist (char line[], trnodep oldfirst)               //checking if this word has already been added 	
+{
+	trnodep treenode = NULL;
+	treenode = oldfirst;
+	bool exists = false;
+	/*while (treenode!=NULL)*/
+	if (oldfirst == NULL)
+		return exists;
+
+		if (strcmp(treenode->english, line) == 0)
+			exists = true;
+		 if (treenode->right != NULL && exists==false)
+			exists = doeswordexist(line, treenode->right);
+		 if(treenode->left != NULL && exists == false)
+			exists = doeswordexist(line, treenode->right);
+		
+	
+	return exists;
+}
+
+void showolddictionary(trnodep oldfirst)
+{
+	trnodep treenode = oldfirst;
+	cout << treenode->english << " - " << treenode->ukrainian <<" "<< treenode ->counter <<endl;
+
+	if (treenode->right != NULL)
+		showolddictionary(treenode->right);
+	if (treenode->left != NULL)
+		showolddictionary(treenode->left);
+	
+
+}
+ 
+void createnewdictionary(trnodep* newfirst, trnodep* newtreenode, trnodep* treenode)
+{
+	if ((*newfirst) == NULL)
+	{
+		(*newfirst) = new trnode;
+		
+		strcpy_s((*newfirst)->english, (*treenode)->english);
+		strcpy_s( (*newfirst)->ukrainian,(*treenode)->ukrainian);
+		(*newfirst)->counter = (*treenode)->counter;
+		(*newtreenode) = (*newfirst);
+
+
+	}
+	else
+	{
+		if ((*newtreenode)->right != NULL && (*newtreenode)->left != NULL)
+			(*newtreenode) = (*newtreenode)->left;
+
+		
+		
+		if ((*newtreenode)->right == NULL)
+		{
+			(*newtreenode)->right = new trnode;
+
+			strcpy_s((*newtreenode)->right->english, (*treenode)->english);
+			strcpy_s((*newtreenode)->right->ukrainian, (*treenode)->ukrainian);
+			(*newtreenode)->right->counter = (*treenode)->counter;
+		}
+		else
+		if ((*newtreenode)->left == NULL)
+		{
+			(*newtreenode)->left = new trnode;
+
+			strcpy_s((*newtreenode)->left->english, (*treenode)->english);
+			strcpy_s((*newtreenode)->left->ukrainian, (*treenode)->ukrainian);
+			(*newtreenode)->left->counter = (*treenode)->counter;
+		}
+		
+
+	}
+
+
+}
+
+void findthewordbycounter(trnodep oldstart,trnodep treenode, trnodep treenode1, trnodep* newfirst, trnodep* newtreenode)                                    //to find the word with the biggest counter 
+{
+	if ((treenode)->exists == false)
+	{
+		if ((treenode)->right != NULL)
+		{
+			(treenode) = (treenode)->right;
+			(treenode1) = oldstart;
+			findthewordbycounter(oldstart, treenode, treenode1, newfirst, newtreenode);
+		}
+		if ((treenode)->left != NULL)
+		{
+			(treenode) = (treenode)->left;
+			(treenode1) = oldstart;
+			findthewordbycounter(oldstart, treenode, treenode1, newfirst, newtreenode);
+		}
+	}
+	else
+	{
+		
+		if ((treenode1)->exists == true)
+		{
+			if ((treenode1)->counter >= treenode->counter)
+				treenode = (treenode1);
+		}
+		
+		if(treenode1->right != NULL && treenode1->right->counter >= treenode->counter && treenode1->right ->exists==true)
+			treenode = (treenode1->right);
+		if(treenode1->left != NULL)
+		findthewordbycounter(oldstart, treenode, treenode1->left, newfirst, newtreenode);
+		else if (treenode1->left == NULL)
+		{
+			treenode->exists = false;
+			createnewdictionary(newfirst, newtreenode, &treenode);
+		}
+
+
+	}
+
+
+}
+
+void createnewtree(trnodep oldstart, trnodep treenode, trnodep treenode1, trnodep* newfirst, trnodep* newtreenode)
+{
+	while (treenode != NULL)
+	{
+		findthewordbycounter(oldstart, treenode, treenode1, newfirst, newtreenode);
+		if(treenode->exists==false && treenode->right->exists==false)
+		treenode = treenode->left;
+
+	}
+
+
+
+}
+
+int main()
+{
+	char choice = '1';
+	trnodep treenode=NULL;           //old tree
+	trnodep treenode1 = NULL;
+	trnodep oldfirst = NULL;
+	trnodep oldstart = NULL;
+
+
+	trnodep newtreenode = NULL;    //new tree
+	trnodep newfirst = NULL;
+
+	char line[29];
+	
+	while (choice == '1')
+	{
+		cout << "Enter a word you want to add" << endl;
+
+		cin.ignore(cin.rdbuf()->in_avail());
+		cin.clear();
+
+		cin.getline(line,29);
+
+		if (cin.fail())
+		{
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+		}
+		if (checkline(line)!=false)
+		{
+			if (doeswordexist(line, oldfirst) == true)
+			{
+				cout << "Sorry, this word already exists" << endl;
+				system("pause");
+			}
+			else
+			{
+				createfirstdictionary(line, &oldfirst, &treenode);
+			}
+		}
+		system("cls");
+
+		cout << "Do you want to continue? 1 - yes, 0 - No" << endl;
+		choice=_getch();
+
+		if (cin.fail())
+		{
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+		}
+		system("cls");
+	}
+
+	if (oldfirst != NULL)
+	{
+		showolddictionary(oldfirst);
+		cout << endl << "----------" << endl;
+
+		treenode = oldfirst;
+		treenode1 = treenode;
+		oldstart = treenode;
+
+		createnewtree(oldstart, treenode, treenode1, &newfirst, &newtreenode);
+
+		cout << "----------------" << endl;
+		showolddictionary(newfirst);
+	}
+	return 0;
+}
