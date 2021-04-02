@@ -213,7 +213,7 @@ void createnewtree(trnodep oldstart, trnodep treenode, trnodep treenode1, trnode
 	while (treenode != NULL)
 	{
 		findthewordbycounter(oldstart, treenode, treenode1, newfirst, newtreenode);
-		if(treenode->exists==false && treenode->right->exists==false)
+		if((treenode->right==NULL && treenode->left ==NULL)||(treenode->exists==false && treenode->right->exists==false))
 		treenode = treenode->left;
 
 	}
@@ -277,8 +277,7 @@ int main()
 
 	if (oldfirst != NULL)
 	{
-		showolddictionary(oldfirst);
-		cout << endl << "----------" << endl;
+		/*showolddictionary(oldfirst);*/
 
 		treenode = oldfirst;
 		treenode1 = treenode;
@@ -287,7 +286,41 @@ int main()
 		createnewtree(oldstart, treenode, treenode1, &newfirst, &newtreenode);
 
 		cout << "----------------" << endl;
-		showolddictionary(newfirst);
+		/*showolddictionary(newfirst);*/
+
+		choice = '1';
+		while (choice == '1')
+		{
+			system("cls");
+
+			cout << "1.Show the initial dictionary\n2.Show the sorted dictionary\n";
+			choice = _getch();
+			if (cin.fail())
+			{
+				cin.ignore(cin.rdbuf()->in_avail());
+				cin.clear();
+			}
+			switch (choice)
+			{
+			case('1'):
+				showolddictionary(oldfirst);
+				system("pause");
+				break;
+			case('2'):
+				showolddictionary(newfirst);
+				system("pause");
+				break;
+			}
+			system("cls");
+
+			cout << "Do you want to continue? 1 - yes, 0 - No" << endl;
+			choice = _getch();
+			if (cin.fail())
+			{
+				cin.ignore(cin.rdbuf()->in_avail());
+				cin.clear();
+			}
+		}
 	}
 	return 0;
 }
