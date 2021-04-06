@@ -87,6 +87,7 @@ void createfirstdictionary (char line[], trnodep* oldfirst, trnodep* treenode)
 		}
 
 	}
+	
 } //to create the first dictionary
 
 bool doeswordexist (char line[], trnodep oldfirst)               //checking if this word has already been added 	
@@ -103,7 +104,7 @@ bool doeswordexist (char line[], trnodep oldfirst)               //checking if t
 		 if (treenode->right != NULL && exists==false)
 			exists = doeswordexist(line, treenode->right);
 		 if(treenode->left != NULL && exists == false)
-			exists = doeswordexist(line, treenode->right);
+			exists = doeswordexist(line, treenode->left);
 		
 	
 	return exists;
@@ -213,11 +214,32 @@ void createnewtree(trnodep oldstart, trnodep treenode, trnodep treenode1, trnode
 	while (treenode != NULL)
 	{
 		findthewordbycounter(oldstart, treenode, treenode1, newfirst, newtreenode);
-		if((treenode->right==NULL && treenode->left ==NULL)||(treenode->exists==false && treenode->right->exists==false))
+		if((treenode->right == NULL && treenode->left == NULL)||(treenode->exists == false && treenode->right->exists == false))
 		treenode = treenode->left;
 
 	}
 
+
+
+}
+
+void increasecounter(char line[], trnodep oldfirst)
+{
+	trnodep treenode = NULL;
+	treenode = oldfirst;
+	int check = 0;
+	if (oldfirst != NULL)
+	{
+		if (strcmp(treenode->english, line) == 0)
+		{
+			treenode->counter += 1;
+			check++;
+		}
+		if (treenode->right != NULL && check==0)
+			increasecounter(line, treenode->right);
+		if (treenode->left != NULL && check==0)
+			increasecounter(line, treenode->left);
+	}
 
 
 }
@@ -278,6 +300,38 @@ int main()
 	if (oldfirst != NULL)
 	{
 		/*showolddictionary(oldfirst);*/
+		choice = '1';
+		
+		while (choice == '1')
+		{
+			treenode = oldfirst;
+			cout << "Enter the word you want to find" << endl;
+
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+
+			cin.getline(line, 29);
+
+			if (cin.fail())
+			{
+				cin.ignore(cin.rdbuf()->in_avail());
+				cin.clear();
+			}
+
+			increasecounter( line,oldfirst);
+
+			cout << "Do you want to continue? 1 - yes, 0 - No" << endl;
+			choice = _getch();
+
+			if (cin.fail())
+			{
+				cin.ignore(cin.rdbuf()->in_avail());
+				cin.clear();
+			}
+			system("cls");
+
+		}
+
 
 		treenode = oldfirst;
 		treenode1 = treenode;
@@ -324,3 +378,4 @@ int main()
 	}
 	return 0;
 }
+
