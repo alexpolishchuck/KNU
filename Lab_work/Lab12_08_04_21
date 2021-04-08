@@ -26,6 +26,7 @@ void findshortestcycle(int n, linep firstlink)
 {
 	int minvalue = 100;
 	linep link = firstlink;
+	linep link2 = firstlink;
 
 	for (int i = 0; i < n; i++)
 	{
@@ -81,8 +82,12 @@ void findshortestcycle(int n, linep firstlink)
 				if (distance[vertice] == -1)
 				{
 					link = link->next;
+					                                        //find length of the edge
+					link2 = firstlink;
+					while (link2->i != x || link2->j != vertice)
+						link2 = link2->next;
 
-					distance[vertice] = 1 + distance[x];
+					distance[vertice] = link2->value + distance[x];                      
 
 					parent[vertice] = x;
 
@@ -103,7 +108,13 @@ void findshortestcycle(int n, linep firstlink)
 				else 
 				{
 					if (parent[x] != vertice && parent[vertice] != x)
-						minvalue = min(minvalue, distance[x] + distance[vertice] + 1);
+					{
+						link2 = firstlink;
+						while (link2->i != x || link2->j != vertice)
+							link2 = link2->next;
+
+						minvalue = min(minvalue, distance[x] + distance[vertice] + link2->value);
+					}
 					link = link->next;
 				}
 
