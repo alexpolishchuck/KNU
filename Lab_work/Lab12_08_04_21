@@ -1,0 +1,228 @@
+#include <iostream>
+#include <math.h>
+#include "conio.h"
+
+using std::cin;
+using std::cout;
+using std::endl;
+
+#define min(x,y) ((x)<(y)? x : y)
+typedef struct lines
+{
+	int i;
+	int j;
+	int value = 0;
+	lines* next=NULL;
+}*linep,line;
+
+typedef struct myqueue
+{
+	int i = -1;
+	myqueue* next = NULL;
+
+}*qp,q;
+
+void findshortestcycle(int n, linep firstlink)
+{
+	int minvalue = 100;
+	linep link = firstlink;
+
+	for (int i = 0; i < n; i++)
+	{
+		int* distance = new int[n];
+		for (int j = 0; j < n; j++)
+			distance[j] = -1;
+
+		int* parent = new int[n];
+		for (int j = 0; j < n; j++)
+			parent[j] = -1;
+
+		distance[i] = 0;
+		qp qelement = new q;
+		qelement->i = i;
+		qp first = qelement;
+
+		while (first != NULL)
+		{
+			int x = first->i;
+			if (first->next == NULL)
+			{
+				delete first;
+				first = NULL;
+			}
+			else
+			{ 
+				qp temporary = first->next;
+				delete first;
+				first = temporary;
+			}
+
+			int vertice = -2;                                      //child
+
+			while (link!= NULL && link->i<= x)
+			{
+				if (link->i > x)                         //searching for children
+					break;
+				while (link->i < x )
+					link = link->next;
+				if (link==NULL || link->i > x)
+					break;
+
+				while( link != NULL && link->value ==0 && link->i == x)
+				link = link->next;
+				if (link == NULL)
+					break;
+
+				if (link->i == x)
+					vertice = link->j;
+				else if (link->i != x)
+					break;
+
+				if (distance[vertice] == -1)
+				{
+					link = link->next;
+
+					distance[vertice] = 1 + distance[x];
+
+					parent[vertice] = x;
+
+					if (first == NULL)
+					{
+						first = new q;
+						first->i = vertice;
+
+					}
+					else
+					{
+						qelement->next = new q;
+						qelement = qelement->next;
+						qelement->i = vertice;
+					}
+
+				}
+				else 
+				{
+					if (parent[x] != vertice && parent[vertice] != x)
+						minvalue = min(minvalue, distance[x] + distance[vertice] + 1);
+					link = link->next;
+				}
+
+
+			}
+
+
+
+
+		}
+	}
+	if (minvalue == 100)
+		cout << "-1" << endl;
+	else cout << minvalue;
+}
+int main()
+{
+	FILE* f1;
+	fopen_s(&f1, "matrix.txt", "r");
+	linep link=NULL;
+	linep link1 = NULL;
+	linep firstlink = NULL;
+
+	fseek(f1, 0, SEEK_SET);
+	int i = 0;
+	int j = -1;
+	char ch;
+
+	while (!feof(f1))
+	{
+		ch = fgetc(f1);
+		if (feof(f1))
+			break;
+		if (ch == '\n')
+		{
+			i++;
+			j = -1;
+		}
+		if (ch != '\n' && ch != 32)
+		{
+			j++;
+			
+			link1 = link;
+			link = new line;
+			link->i = i;
+			link->j = j;
+			if(link1!=NULL)
+			link1->next = link;
+
+			while (ch != 32 && ch!='\n')
+			{
+				link->value = link->value * 10 + ch - '0';
+
+				ch = fgetc(f1);
+				if (feof(f1))
+					break;
+			}
+			if (ch == '\n')
+			{
+				i++;
+				j = -1;
+			}
+			if (firstlink == NULL)
+				firstlink = link;
+
+		}
+
+
+
+	}
+	
+	link = firstlink;
+	while (link != NULL)
+	{
+		cout << link->value << " ";
+		if (link->next != NULL && link->next->i != link->i)
+			cout << endl;
+		link = link->next;
+
+	}
+	cout << endl;
+
+	link = firstlink;
+	int n = 0;                                            //number of vertices
+	while (link->i!= 1)
+	{
+		n++;
+		link = link->next;
+	}
+
+	findshortestcycle(n, firstlink);
+	return 0;
+}
+
+
+/*
+0 1 0 0 1 0 1
+1 0 0 1 0 0 0
+0 0 0 1 1 1 1
+0 1 1 0 0 0 1
+1 0 1 0 0 1 1
+0 0 1 0 1 0 1
+1 0 1 1 1 1 0
+*/
+/*
+0 12 32 24
+12 0 11 10
+32 11 0 65
+24 10 65 0
+*/
+/*
+0 1 0 0
+1 0 0 1
+0 0 0 1
+0 1 1 0
+*/
+/*
+0 1 0 1
+1 0 1 1
+0 1 0 0
+1 1 0 0
+*/
