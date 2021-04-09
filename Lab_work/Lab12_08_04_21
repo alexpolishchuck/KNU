@@ -28,8 +28,18 @@ void findshortestcycle(int n, linep firstlink)
 	linep link = firstlink;
 	linep link2 = firstlink;
 
+	
+	int numb = -1;
+
+	
+	int* minverticearray = new int[n];
+	for (int k = 0; k < n; k++)
+		minverticearray[k] = 0;                       //maybe delete
+
 	for (int i = 0; i < n; i++)
 	{
+		link = firstlink;
+
 		int* distance = new int[n];
 		for (int j = 0; j < n; j++)
 			distance[j] = -1;
@@ -45,8 +55,12 @@ void findshortestcycle(int n, linep firstlink)
 
 		while (first != NULL)
 		{
+			
 			int x = first->i;
-			if (first->next == NULL)
+
+			
+
+			if (first->next == NULL)           //maybe this is a problem as it doesnt create next for the first one
 			{
 				delete first;
 				first = NULL;
@@ -71,11 +85,12 @@ void findshortestcycle(int n, linep firstlink)
 
 				while( link != NULL && link->value ==0 && link->i == x)
 				link = link->next;
-				if (link == NULL)
+				if (link == NULL || link->i > x)
 					break;
 
-				if (link->i == x)
+				if (link->i == x && link->value!=0)              //maybe delete after &&
 					vertice = link->j;
+				
 				else if (link->i != x)
 					break;
 
@@ -91,7 +106,7 @@ void findshortestcycle(int n, linep firstlink)
 
 					parent[vertice] = x;
 
-					if (first == NULL)
+					if (first == NULL)                                    //maybe this is a problem as it doesnt create next for the first one
 					{
 						first = new q;
 						first->i = vertice;
@@ -112,9 +127,25 @@ void findshortestcycle(int n, linep firstlink)
 						link2 = firstlink;
 						while (link2->i != x || link2->j != vertice)
 							link2 = link2->next;
+						
+						if (distance[x] + distance[vertice] + link2->value < minvalue)    //maybe delete
+						{
+							for (int k = 0; k < n; k++)
+								minverticearray[k] = 0;
+							for(int k=x; k!=-1;)
+							{
+								minverticearray[k] = 1;
+								k = parent[k];
+							}
+							minverticearray[vertice] = 1;
+
+						}
 
 						minvalue = min(minvalue, distance[x] + distance[vertice] + link2->value);
+						
+						
 					}
+					
 					link = link->next;
 				}
 
@@ -128,7 +159,20 @@ void findshortestcycle(int n, linep firstlink)
 	}
 	if (minvalue == 100)
 		cout << "-1" << endl;
-	else cout << minvalue;
+	else
+	{
+		cout << minvalue << endl;
+		for (int k = 0; k < n; k++)
+			if (minverticearray[k] == 1)
+				cout << k << "->";
+		for (int k = 0; k < n; k++)
+			if (minverticearray[k] == 1)
+			{
+				cout << k ;
+				break;
+			}
+		
+	}
 }
 int main()
 {
