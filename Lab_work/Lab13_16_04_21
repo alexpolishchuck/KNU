@@ -1,0 +1,260 @@
+#include <iostream>
+#include <math.h>
+#include "conio.h"
+
+using std::cin;
+using std::cout;
+using std::endl;
+
+typedef struct jcolumn
+{
+	int j = -1;
+	int value = 0;
+	jcolumn* next = NULL;
+}*columnp,column;
+
+typedef struct irow
+{
+	int i = -1;
+	jcolumn* column = NULL;
+	irow* next = NULL;
+}*rowp ,row;
+
+typedef struct verticesarray
+{
+	int i = -1;
+	int value = 0;
+
+
+}*verarrp,verarr;
+
+void addvalue(rowp* matrixrow, rowp* firstrow,int i , int j, int value)
+{
+	rowp previousrow = NULL;
+
+	if ((*firstrow) == NULL)
+	{
+		(*matrixrow) = new row;
+		(*matrixrow)->i = i;
+		(*matrixrow)->column = new column;
+		(*matrixrow)->column->j = j;
+		(*matrixrow)->column->value = value;
+		(*firstrow) = (*matrixrow);
+
+
+	}
+	else
+	{
+		(*matrixrow) = (*firstrow);
+		while ((*matrixrow) != NULL)
+		{
+			if ((*matrixrow)->i == i)
+				break;
+			else
+			{
+				previousrow = (*matrixrow);
+				(*matrixrow) = (*matrixrow)->next;
+			}
+		}
+		if ((*matrixrow) == NULL)
+		{
+			(*matrixrow) = new row;
+			(*matrixrow)->i = i;
+			(*matrixrow)->column = new column;
+			(*matrixrow)->column->j = j;
+			(*matrixrow)->column->value = value;
+			previousrow->next = (*matrixrow);
+		}
+		else
+		{
+			columnp matrixcolumn = NULL;
+			columnp previouscolumn = NULL;
+			matrixcolumn = (*matrixrow)->column;
+			while (matrixcolumn != NULL)
+			{
+				previouscolumn = matrixcolumn;
+				matrixcolumn = matrixcolumn->next;
+			}
+
+			matrixcolumn = new column;
+			matrixcolumn->j = j;
+			matrixcolumn->value = value;
+			previouscolumn->next = matrixcolumn;
+
+		}
+
+	}
+
+
+}
+
+void insertionsort(rowp matrixrow, rowp firstrow, int number)
+{
+	columnp matrixcolumn = NULL;
+	verarrp* arrayofvertices = new verarrp [number];
+	verarrp element = NULL;
+
+	int count = 0;
+	matrixrow = firstrow;
+	for (int i = 0; i < number; i++)
+	{
+		count = 0;
+		while (matrixrow->i != i)
+			matrixrow = matrixrow->next;
+		matrixcolumn = matrixrow->column;
+		while (matrixcolumn != NULL)
+		{
+			if (matrixcolumn->value != 0)
+				count++;
+			matrixcolumn = matrixcolumn->next;
+		}
+		element = new verarr;
+		element->i = i;
+		element->value = count;
+		arrayofvertices[i] = element;
+	}
+	int j = 0;
+	for (int i = 1; i < number; i++)
+	{
+		element = arrayofvertices[i];
+		j = i - 1;
+		while (j > -1 && element->value < arrayofvertices[j]->value)
+		{
+			arrayofvertices[j + 1] = arrayofvertices[j];
+			arrayofvertices[j] = element;
+			j--;
+
+		}
+
+
+
+	}
+
+	for (int i = 0; i < number; i++)
+	{
+		cout<<arrayofvertices[i]->i + 1<< " ";
+
+	}
+	for (int i = 0; i < number; i++)
+	{
+		 delete arrayofvertices[i];
+
+	}
+	delete[] arrayofvertices;
+	system("pause");                                 
+}
+
+void bubblesort(rowp matrixrow, rowp firstrow, int number)
+{
+	columnp matrixcolumn = NULL;
+	verarrp* arrayofvertices = new verarrp[number];
+	verarrp element = NULL;
+
+	int count = 0;
+	matrixrow = firstrow;
+	for (int i = 0; i < number; i++)
+	{
+		count = 0;
+		while (matrixrow->i != i)
+			matrixrow = matrixrow->next;
+		matrixcolumn = matrixrow->column;
+		while (matrixcolumn != NULL)
+		{
+			if (matrixcolumn->value != 0)
+				count+= matrixcolumn->value;
+			matrixcolumn = matrixcolumn->next;
+		}
+		element = new verarr;
+		element->i = i;
+		element->value = count;
+		arrayofvertices[i] = element;
+	}
+
+
+
+
+}
+
+int main()
+{
+	char choice='y';
+
+	rowp matrixrow = NULL; 
+	rowp firstrow = NULL;
+
+	FILE* f1;
+	fopen_s(&f1, "matrix.txt", "r");
+	fseek(f1, 0, SEEK_SET);
+
+	int i = 0, j = -1, value = 0;
+	while (!feof(f1))
+	{
+		choice = fgetc(f1);
+		if (feof(f1))
+			break;
+		if (choice > 47 && choice < 58)
+		{
+			value = 0;
+			while (choice != 32 && choice != '\n' && !feof(f1))              //reading the weight of the edge
+			{
+				value = value * 10 + choice - '0';
+				choice = fgetc(f1);
+			}
+			j++;
+			
+			addvalue(&matrixrow, &firstrow, i, j, value);
+		}
+
+		if (choice == '\n')
+		{
+			i++;
+			j = -1;
+		}
+
+	}
+
+	int number = 0;
+	matrixrow = firstrow;
+
+	while (matrixrow != NULL)
+	{
+		number++;
+		matrixrow = matrixrow->next;
+	}
+
+	choice = 'y';
+	while (choice == 'y')
+	{
+		cout << "Choose the function" << endl;
+		choice = _getch();
+		if (cin.fail())
+		{
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+
+		}
+
+		switch (choice)
+		{
+		case('1'):
+			insertionsort(matrixrow, firstrow, number);
+				break;
+
+
+			
+
+
+
+		}
+		system("cls");
+		cout << "Do you want to continue? y - yes, n - no" << endl;
+		choice = _getch();
+		if (cin.fail())
+		{
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.clear();
+
+		}
+	}
+	return 0;
+}
