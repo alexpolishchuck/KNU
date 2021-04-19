@@ -1,10 +1,12 @@
 #include <iostream>
 #include <math.h>
 #include "conio.h"
+#include "functional"
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::function;
 
 typedef struct jcolumn
 {
@@ -27,6 +29,20 @@ typedef struct verticesarray
 
 
 }*verarrp,verarr;
+
+typedef struct edgesarray
+{
+	int i = -1;
+	int j = -1;
+
+	int i2 = -1;
+	int j2 = -1;             //used for saving coordinates of the second vertice of the edge in the mergesort function
+
+	int value = 0;
+
+}*edarrp,edarr;
+
+
 
 void addvalue(rowp* matrixrow, rowp* firstrow,int i , int j, int value)
 {
@@ -150,7 +166,7 @@ void bubblesort(rowp matrixrow, rowp firstrow, int number)
 	verarrp* arrayofvertices = new verarrp[number];
 	verarrp element = NULL;
 
-	int count = 0;
+	int count = 0;                                        //summary value of edges
 	matrixrow = firstrow;
 	for (int i = 0; i < number; i++)
 	{
@@ -169,6 +185,305 @@ void bubblesort(rowp matrixrow, rowp firstrow, int number)
 		element->value = count;
 		arrayofvertices[i] = element;
 	}
+
+	for (int i = 0; i < number; i++)
+		for (int j = i; j < number; j++)
+		{
+			if (arrayofvertices[i]->value > arrayofvertices[j]->value)
+			{
+				element = arrayofvertices[j];
+				arrayofvertices[j] = arrayofvertices[i];
+				arrayofvertices[i] = element;
+			}
+	    }
+
+	for (int i = 0; i < number; i++)
+	{
+		cout << arrayofvertices[i]->i + 1 << " ";
+
+	}
+	for (int i = 0; i < number; i++)
+	{
+		delete arrayofvertices[i];
+
+	}
+	delete[] arrayofvertices;
+	system("pause");
+
+}
+
+void quicksort(edarrp arrayofedges[],int k)
+{
+	if (k > 1) {
+		edarrp* left = new edarrp[k];
+		edarrp* right = new edarrp[k];
+		int l = -1, r = -1;
+
+		edarrp pivot = arrayofedges[k / 2];
+
+		for (int i = 0; i <= k; i++)
+		{
+			if (arrayofedges[i]->value < pivot->value)
+			{
+				l++;
+				left[l] = arrayofedges[i];
+
+
+			}
+			else if (arrayofedges[i]->value > pivot->value)
+			{
+				r++;
+				right[r] = arrayofedges[i];
+
+
+			}
+
+		}
+		quicksort(left, l);
+		quicksort(right, r);
+
+		for (int i = 0; i <= k; i++)
+		{
+			if (i <= l)
+			{
+				arrayofedges[i] = left[i];
+
+
+			}
+			else if (i == l + 1)
+			{
+				arrayofedges[i] = pivot;
+
+			}
+			else if (i > l + 1)
+			{
+				arrayofedges[i] = right[i - (l + 2)];
+
+
+			}
+
+		}
+		delete[] left;
+		delete[] right;
+	}
+}
+
+void sortbylengthoftheedges(rowp matrixrow, rowp firstrow, int number)
+{
+	columnp matrixcolumn = NULL;
+	matrixrow = firstrow; 
+	edarrp* arrayofedges = new edarrp[number*number];
+
+
+	int k = -1;
+	while (matrixrow != NULL)
+	{
+		matrixcolumn = matrixrow->column;
+		while (matrixcolumn != NULL)
+		{
+			k++;
+			arrayofedges[k] = new edarr;
+			arrayofedges[k]->i = matrixrow->i;
+			arrayofedges[k]->j = matrixcolumn->j;
+			arrayofedges[k]->value = matrixcolumn->value;
+			matrixcolumn = matrixcolumn->next;
+
+		}
+		matrixrow = matrixrow->next;
+	}
+
+	
+
+	cout << "-----------------------" << endl;
+
+	for (int i = 0; i <= k; i++)
+	{
+		if (arrayofedges[i]->value == 0)
+		{
+			delete arrayofedges[i];                      
+			for (int j = i + 1; j <= k; j++)
+			{
+				arrayofedges[j - 1] = arrayofedges[j];
+				
+			}
+			k--;
+			i--;
+		}
+	}
+
+
+	for (int i = 0; i <= k; i++)
+	{
+		for (int j = i + 1; j <= k; j++)
+		{
+			if (arrayofedges[i]->i == arrayofedges[j]->j && arrayofedges[i]->j == arrayofedges[j]->i && arrayofedges[i]->value == arrayofedges[j]->value)
+			{
+				delete arrayofedges[j];
+				for (int p = j + 1; p <= k; p++)
+				{
+					arrayofedges[p - 1] = arrayofedges[p];
+					
+				}
+				k--;
+
+			}
+
+
+		}
+	}
+
+	for (int i = 0; i <= k; i++)
+	{
+		cout << "( " << arrayofedges[i]->i << " ; " << arrayofedges[i]->j << " ) " << arrayofedges[i]->value << endl;
+	}
+
+	quicksort(arrayofedges, k);
+	
+	cout << "---------------------" << endl;
+	for (int i = 0; i <= k; i++)
+	{
+		cout << "( " << arrayofedges[i]->i << " ; " << arrayofedges[i]->j << " ) " << arrayofedges[i]->value << endl;
+	}
+
+
+	system("pause");
+}
+
+void shakersort()
+{
+	function<int(int, int)> funct;
+	int number;
+	cout << "Enter the number of vertices" << endl;
+	cin >> number;
+	
+	edarrp* arrayofvertices = new edarrp[number];
+	
+	for (int i = 0; i < number; i++)
+	{
+		cout << "Enter coordinates of the vertice" << endl;
+		arrayofvertices[i] = new edarr;
+
+		cin >> arrayofvertices[i]->i;
+		cin >> arrayofvertices[i]->j;
+		arrayofvertices[i]->value = funct(arrayofvertices[i]->i, arrayofvertices[i]->j);
+	}
+	
+	for (int i = 0; i < number; i++)
+	{
+		for (int j = i + 1; j < number; j++)
+		{
+			if (arrayofvertices[j - 1]->value > arrayofvertices[j]->value)
+			{
+				edarrp temporary = arrayofvertices[j];
+				arrayofvertices[j] = arrayofvertices[j - 1];
+				arrayofvertices[j - 1] = temporary;
+			}
+		}
+
+	}
+	for (int i = number - 1; i > 0; i++)
+	{
+		if(arrayofvertices[i - 1]->value > arrayofvertices[i]->value)
+		{
+			edarrp temporary = arrayofvertices[i];
+			arrayofvertices[i] = arrayofvertices[i - 1];
+			arrayofvertices[i - 1] = temporary;
+		}
+	}
+
+}
+
+void mergesort(edarrp arrayofedges[], int number)
+{
+	if (number > 1)
+	{
+		int l = number / 2;
+		int r = number - l;
+		edarrp* left = new edarrp[l];
+		edarrp*right = new edarrp[r];
+		for (int i = 0; i < number; i++)
+		{
+			if (i < l)
+				left[i] = arrayofedges[i];
+			else
+				right[i - l] = arrayofedges[i];
+
+		}
+
+		mergesort(left, l);
+		mergesort(right, r);
+
+		int i = 0, j = 0;
+
+		while (i < l || j < r)
+		{
+			if (i < l && j < r)
+			{
+				if (left[i]->value < right[j]->value)
+				{
+					arrayofedges[i + j] = left[i];
+					i++;
+				}
+				else
+				{
+					arrayofedges[i + j] = right[j];
+					j++;
+				}
+			}
+			else if (i < l)
+			{
+				arrayofedges[i + j] = left[i];
+				i++;
+			}
+			else if (j < r)
+			{
+				arrayofedges[i + j] = right[j];
+				j++;
+			}
+
+
+		}
+
+		delete[] left;
+		delete[] right;
+	}
+
+
+
+}
+
+void middleofanedge()
+{
+	function<int(int, int)> funct;
+	int number;
+	cout << "Enter the number of edges" << endl;
+	cin >> number;
+
+	edarrp* arrayofedges = new edarrp[number];
+
+	for (int i = 0; i < number; i++)
+	{
+		cout << "Enter coordinates of the vertice" << endl;
+		arrayofedges[i] = new edarr;
+
+		cin >> arrayofedges[i]->i;
+		cin >> arrayofedges[i]->j;
+		cin >> arrayofedges[i]->i2;
+		cin >> arrayofedges[i]->j2;
+
+		int midi = (arrayofedges[i]->i + arrayofedges[i]->i2) / 2;
+		int midj = (arrayofedges[i]->j + arrayofedges[i]->j2) / 2;
+
+		arrayofedges[i]->value = funct(midi, midj);
+	}
+
+	mergesort(arrayofedges, number);
+
+}
+
+void shellsort()
+{
+
 
 
 
@@ -218,7 +533,7 @@ int main()
 
 	while (matrixrow != NULL)
 	{
-		number++;
+		number++;                                              // number of vertices
 		matrixrow = matrixrow->next;
 	}
 
@@ -239,11 +554,23 @@ int main()
 		case('1'):
 			insertionsort(matrixrow, firstrow, number);
 				break;
+		case('2'):
+			bubblesort(matrixrow, firstrow, number);
+			break;
 
+		case ('3'):
+			shakersort();
+			break;
 
-			
+		case('4'):
+			sortbylengthoftheedges( matrixrow,  firstrow, number);
+				break;
+		case ('5'):
+			middleofanedge();
+			break;
+		case ('6'):
 
-
+			break;
 
 		}
 		system("cls");
