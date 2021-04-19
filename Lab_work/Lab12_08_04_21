@@ -34,7 +34,7 @@ void findshortestcycle(int n, linep firstlink)
 	
 	int* minverticearray = new int[n];
 	for (int k = 0; k < n; k++)
-		minverticearray[k] = 0;                       //maybe delete
+		minverticearray[k] = 0;                       
 
 	for (int i = 0; i < n; i++)
 	{
@@ -60,7 +60,7 @@ void findshortestcycle(int n, linep firstlink)
 
 			
 
-			if (first->next == NULL)           //maybe this is a problem as it doesnt create next for the first one
+			if (first->next == NULL)           
 			{
 				delete first;
 				first = NULL;
@@ -106,7 +106,7 @@ void findshortestcycle(int n, linep firstlink)
 
 					parent[vertice] = x;
 
-					if (first == NULL)                                    //maybe this is a problem as it doesnt create next for the first one
+					if (first == NULL)                                    
 					{
 						first = new q;
 						first->i = vertice;
