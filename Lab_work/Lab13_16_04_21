@@ -42,6 +42,24 @@ typedef struct edgesarray
 
 }*edarrp,edarr;
 
+typedef struct areaoftriangle
+{
+	int i = -1;
+	int j = -1;
+	int k = -1;
+
+	int value = 0;
+	areaoftriangle* next = NULL;
+}*areap, area;
+
+typedef struct myqueue
+{
+	int i = -1;
+	myqueue* next = NULL;
+
+}*qp, q;
+
+
 
 
 void addvalue(rowp* matrixrow, rowp* firstrow,int i , int j, int value)
@@ -481,13 +499,250 @@ void middleofanedge()
 
 }
 
-void shellsort()
+void addtoanarray(areap  massoftriangles [], areap massofareas[],int* n, int parents [], int k, int vertice)
 {
+	int check = 0;
+	int array1[3];
+	int array2[3];
+	array1[0] = vertice;
+	array1[1] = k;
+	array1[2] = parents[k];
+	for (int i = 0; i < 3; i++)
+	{
+		for(int j=i+1; j<3; j++)
+			if (array1[i] > array1[j])
+			{
+				int temp = array1[i];
+				array1[i] = array1[j];
+				array1[j] = temp;
+			}
+	}
+	
+	
+
+	if (*n != -1)
+	{
+		for (int i = 0; i <= *n; i++)
+		{
+			array2[0] = massofareas[i]->i;
+			array2[1] = massofareas[i]->j;
+			array2[2] = massofareas[i]->k;
+			for (int f = 0;  f< 3; f++)
+			{
+				for (int j = f + 1; j < 3; j++)
+					if (array2[f] > array2[j])
+					{
+						int temp = array2[f];
+						array2[f] = array2[j];
+						array2[j] = temp;
+					}
+			}
+
+			if (array1[0] == array2[0] && array1[1] == array2[1] && array1[2] == array2[2])
+				check++;
+
+		}
+		
+
+
+	}
+	if (check == 0)
+	{
+		*n += 1;
+		massofareas[*n] = new area;
+		massofareas[*n]->i = vertice;
+		massofareas[*n]->j = k;
+		massofareas[*n]->k = parents[k];
+
+		float length1, length2, length3;
+		length1 = sqrt(pow(massoftriangles[vertice]->i - massoftriangles[k]->i, 2) + pow(massoftriangles[vertice]->j - massoftriangles[k]->j, 2));
+		length2 = sqrt(pow(massoftriangles[k]->i - massoftriangles[parents[k]]->i, 2) + pow(massoftriangles[k]->j - massoftriangles[parents[k]]->j, 2));
+		length3 = sqrt(pow(massoftriangles[parents[k]]->i - massoftriangles[vertice]->i, 2) + pow(massoftriangles[parents[k]]->j - massoftriangles[vertice]->j, 2));
+
+		float p = (length1 + length2 + length3) / 2;
+		p = sqrt(p * (p - length1) * (p - length2) * (p - length3));
+		massofareas[*n]->value = p;
+	}
+
+}
+
+void shellsort(int number, rowp matrixrow, rowp firstrow)
+{
+	columnp matrixcolumn = NULL;
+	areap* massoftriangles = new areap[number];                  //coordinates of vertices
+	areap* massofareas = new areap[number];
+	for (int i = 0; i < number; i++)                                     //saving coordinates of vertices
+	{
+		massoftriangles[i] = new area;
+		cout << "Enter the coordinates of the vertice " << i << endl;
+		cin >> massoftriangles[i]->i;
+		cin >> massoftriangles[i]->j;
+		massoftriangles[i]->k = -1;
+
+
+	}
+	int n = -1;                                                              //counter for massive of areas
+
+	for (int i = 0; i < number; i++)                //searching for cycles 
+	{
+
+		int* parents = new int[number];
+		for (int j = 0; j < number; j++)
+			parents[j] = -1;
+
+		bool* isvisited = new bool[number];
+		for (int j = 0; j < number; j++)
+			isvisited[j] = 0;
+
+		isvisited[i] = 1;
+
+		qp queueelement = new q;
+		queueelement->i = i;
+		qp firstinqueue = queueelement;
+
+		while (firstinqueue != NULL)
+		{
+			int x = firstinqueue->i;                        //take out the first element from the queue
+			
+			qp temporary = firstinqueue->next;
+			delete firstinqueue;
+			firstinqueue = temporary;
+			if (firstinqueue == NULL)
+				queueelement = NULL;
+
+			matrixrow = firstrow;
+
+			while (matrixrow != NULL && matrixrow->i != x )
+				matrixrow = matrixrow->next;
+
+
+			matrixcolumn = matrixrow->column;
+			int vertice = -1;
+			while (matrixcolumn != NULL)
+			{
+				while(matrixcolumn!= NULL && (matrixcolumn->j==x || matrixcolumn->value==0))
+					matrixcolumn = matrixcolumn->next;
+
+				if (matrixcolumn == NULL)
+					break;
+
+				vertice = matrixcolumn->j;
+
+				if (matrixcolumn->j != x && isvisited[vertice]==0)
+				{
+
+					 
+					matrixcolumn = matrixcolumn->next;
+
+					isvisited[vertice] = 1;
+					parents[vertice] = x;
+					if (queueelement != NULL)
+					{
+						queueelement->next = new q;
+						queueelement = queueelement->next;
+						queueelement->i = vertice;
+						
+					}
+					else
+					{
+						queueelement = new q;
+						queueelement->i = vertice;
+						firstinqueue = queueelement;
+					}
+				}
+				else
+				{
+					if (parents[vertice] != x && parents[x] != vertice)
+					{
+						int count = -1;                                   //change to 0
+						for (int k = x; k != -1;)
+						{
+							k = parents[k];
+							count++;
+						}
+
+						for (int k = vertice; k != -1;)                      //maybe delete
+						{
+							k = parents[k];
+							count++;
+						}
+
+						if (count == 3)
+						{
+							cout << vertice << " ";                     //delete
+							for (int k = x; k != -1;)
+							{
+								cout << k << "  ";
+								k = parents[k];
+
+							}
+							cout << endl;
+							addtoanarray(massoftriangles, massofareas, &n, parents, x, vertice);
+						}
+					}
+
+					matrixcolumn = matrixcolumn->next;
+				}
+
+			
+
+			}
+
+
+		}
+		
 
 
 
 
 
+	}
+	
+	for (int i = 0; i < number; i++)
+	{
+		delete massoftriangles[i];
+	}
+	delete[] massoftriangles;
+
+	cout << "--------------------------" << endl;                        //delete
+	for (int i = 0; i <= n; i++)
+	{
+		cout << massofareas[i]->i << " " << massofareas[i]->j << " " << massofareas[i]->k << " " << massofareas[i]->value << endl;
+
+
+	}
+
+	for (int i = n/2; i>=1; i/=2)
+	{
+		for (int j=i; j<=n; j++)
+		{
+			for (int k = j; k >= i && massofareas[k - i]->value > massofareas[k]->value; k -= i)
+			{
+				areap temp = massofareas[k - i];
+				massofareas[k - i] = massofareas[k];
+				massofareas[k] = temp;
+
+			}
+
+
+		}
+
+
+
+
+	}
+
+	cout << "--------------------------" << endl;                        //delete
+	for (int i = 0; i <= n; i++)
+	{
+		cout << massofareas[i]->i << " " << massofareas[i]->j << " " << massofareas[i]->k << " " << massofareas[i]->value << endl;
+
+
+	}
+
+
+
+	system("pause");
 }
 
 int main()
@@ -569,7 +824,7 @@ int main()
 			middleofanedge();
 			break;
 		case ('6'):
-
+			shellsort(number, matrixrow, firstrow);
 			break;
 
 		}
@@ -585,3 +840,17 @@ int main()
 	}
 	return 0;
 }
+
+/*
+0 12 32 24
+12 0 11 10
+32 11 0 65
+24 10 65 0
+*/
+
+/*
+0 0 32 24
+12 0 0 10
+32 11 0 65
+0 10 0 0
+*/
