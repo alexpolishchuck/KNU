@@ -1,0 +1,325 @@
+#include <iostream>
+#include <stdio.h>
+#include  <conio.h>
+#include <vector>
+
+using namespace std;
+
+class graph
+{
+public:
+	vector<vector<int>> matrix;	
+	int i;
+	void defsize()
+	{
+		i = matrix.size();
+    }
+	
+
+};
+
+class mystack
+{
+public:
+	vector<int> st;
+	int size;
+	void add(int number)
+	{
+		st.push_back(number);
+		last++;
+	}
+	void poplast()
+	{
+		st.pop_back();
+		last--;
+	}
+	void lastelement(int& element)
+	{
+		element = st[last];
+	}
+	void defsize()
+	{
+		size = st.size();
+	}
+private:
+	int last = -1;
+
+};
+int DeleteVertex(graph&gr,int index)
+{
+	if (index >= gr.i || index<0)
+		return 0;
+	if (index != gr.i - 1)
+	{
+		for (int i = index; i < gr.i - 1; i++)
+			gr.matrix[i] = gr.matrix[i + 1];
+		for (int i = 0; i < gr.i - 1;i++)
+		
+			for (int j = index; j < gr.i - 1; j++)
+				gr.matrix[i][j] = gr.matrix[i][j + 1];
+			
+	}
+
+	
+	gr.matrix.resize(gr.i - 1);
+	gr.defsize();
+	return 0;
+}
+void DeleteEdge(graph& gr,int a, int b)
+{
+	gr.matrix[a][b] = 0;
+	gr.matrix[b][a] = 0;
+
+}
+
+int CreateMinimalSpanningTree(graph& gr)
+{
+	int size = gr.i;
+	if (size == 1)
+		return -1;
+
+	vector<bool> isvisited;
+	vector <int> parents;
+	for (int i = 0; i < size; i++)
+		isvisited.push_back(false);
+	isvisited[0] = true;
+	for (int i = 0; i < size; i++)
+		parents.push_back(-1);
+	mystack s;
+
+	s.add(0);
+	s.defsize();
+	int element = -1;
+	while (s.size)
+	{
+
+		s.lastelement(element);
+		isvisited[element] = true;
+		int min = 0;
+		int index = -1;
+		for (int i = 0; i < size; i++)
+		{
+			
+			if ((min==0 || gr.matrix[element][i]<min) && gr.matrix[element][i] && !isvisited[i])
+			{
+				int min1 = 0;
+				for (int j = 0; j < size; j++) //verifing that there are no cheaper edges
+				{
+					if ((min1 == 0 || gr.matrix[i][j] < min1) && gr.matrix[i][j] && isvisited[j] && j!=element)
+						min1 = gr.matrix[i][j];
+
+				}
+				if (min1 == 0 || min1 > gr.matrix[element][i])
+				{
+					min = gr.matrix[element][i];
+					index = i;
+				}
+			}
+			else if (gr.matrix[element][i] && parents[i] != element && parents[element] != i && isvisited[i])
+				DeleteEdge(gr, element, i);
+		}
+		if (index != element && index!=-1)
+		{
+			
+			
+				s.add(index);
+				parents[index] = element;
+			
+		}
+		int last = -1;
+		s.lastelement(last);
+		if (last == element)
+		{
+			s.poplast();
+			s.defsize();
+		}
+	}
+
+
+
+
+
+
+
+
+	return 0; //return index of the first element(?)
+}
+int CreateSpanningTree(graph& gr)
+{
+	
+	int size = gr.i;
+	if (size == 1)
+		return -1;
+
+	vector<bool> isvisited;
+	vector <int> parents;
+	for (int i = 0; i < size; i++)
+		isvisited.push_back(false);
+	isvisited[0] = true;
+	for (int i = 0; i < size; i++)
+		parents.push_back(-1);
+	mystack s;
+
+	s.add(0);
+	s.defsize();
+	int element = -1;
+	while (s.size)
+	{
+		
+		s.lastelement(element);
+		isvisited[element] = true;
+		/*for (int i = 0; i < size; i++)
+		{
+			if (gr.matrix[element][i] && !isvisited[i])
+			{
+				s.add(i);
+				
+			}
+			else if (gr.matrix[element][i] && i!= parents[element] )
+				DeleteEdge(gr,element, i);
+			
+		}*/
+		for (int i = 0; i < size; i++)
+		{
+			if (gr.matrix[element][i] && !isvisited[i])
+			{
+				s.add(i);
+				parents[i] = element;
+				break;
+			}
+			else if(gr.matrix[element][i] && parents[i]!=element && parents[element]!=i)
+				DeleteEdge(gr, element, i);
+		}
+		int last=-1;
+		s.lastelement(last);
+		if (last == element)
+		{
+			s.poplast();
+			s.defsize();
+		}
+	}
+
+
+
+
+	
+
+	
+
+	return 0; //return index of the first element(?)
+}
+
+void SaveMatrix(graph& gr)
+{
+	FILE* f1;
+	fopen_s(&f1, "New matrix.txt", "w");
+	for (int i = 0; i < gr.i; i++)
+	{
+		for (int j = 0; j < gr.i; j++)
+		{
+			int number = gr.matrix[i][j];
+			int counter = 0;
+			while (number != 0)
+			{
+				number /= 10;
+				counter++;
+			}
+			number = gr.matrix[i][j];
+			if (!counter)
+				counter++;
+			while (counter)
+			{
+				int a = pow(10, counter - 1);
+				a = number / a;
+				int b = a % 10;
+				fputc(b + '0', f1);
+				counter--;
+			}
+			if(j!= gr.i -1)
+			fputc(' ', f1);
+		}
+		if(i!=gr.i -1)
+			fputc('\n', f1);
+	}
+	fclose(f1);
+}
+
+int main()
+{
+	graph gr;
+	FILE* f1;
+	fopen_s(&f1, "matrix.txt", "r");
+	char c;
+	int i = 0;
+	int j = 0;
+	int number = 0;
+	vector <int> row;
+	while (!feof(f1))
+	{
+		c = fgetc(f1);
+		
+		while (c > 47 && c < 58)
+		{
+			if (!number)
+				number += c - '0';
+			else
+				number = number * 10 + c - '0';
+			c = fgetc(f1);
+		}
+		row.push_back(number);
+		j++;
+		number = 0;
+		if (feof(f1))
+		{
+			gr.matrix.push_back(row);
+			break;
+		}
+		else if (c == '\n')
+		{
+			gr.matrix.push_back(row);
+			row.clear();
+			i++;
+			j = 0;
+		}
+	}
+	fclose(f1);
+	gr.defsize();
+	
+	for (int k = 0; k <= i; k++)
+	{
+		for(int l=0; l<j; l++)
+		cout << gr.matrix[k][l] << " ";
+		cout << endl;
+	}
+	cout << "-------------------------" << endl;
+	cout << "-------------------------" << endl;
+	CreateSpanningTree(gr);
+
+	for (int k = 0; k <= i; k++)
+	{
+		for (int l = 0; l < j; l++)
+			cout << gr.matrix[k][l] << " ";
+		cout << endl;
+	}
+	cout << "-------------------------" << endl;
+	cout << "-------------------------" << endl;
+	CreateMinimalSpanningTree(gr);
+	for (int k = 0; k <= i; k++)
+	{
+		for (int l = 0; l < j; l++)
+			cout << gr.matrix[k][l] << " ";
+		cout << endl;
+	}
+
+	DeleteVertex (gr, 0);
+	for (int k = 0; k < gr.i; k++)
+	{
+		for (int l = 0; l < gr.i; l++)
+			cout << gr.matrix[k][l] << " ";
+		cout << endl;
+	}
+
+	SaveMatrix(gr);
+
+	return 0;
+}
